@@ -1,5 +1,9 @@
 # dont-track-me
 
+<p align="center">
+  <img src="assets/cover.png" alt="dont-track-me cover" width="600">
+</p>
+
 > **Disclaimer:** This entire codebase was generated using Claude (Anthropic). While we've tested it, use it with caution and review the code before relying on it for your privacy.
 >
 > **Scope:** This toolkit is an educational starting point, not a complete privacy solution. Real-world digital protection requires a layered approach — Tor/VPN, hardened browsers (Mullvad, LibreWolf), OS-level isolation (Tails, Qubes), hardware security keys, and operational discipline. The checks and countermeasures here cover common tracking vectors but do not address advanced threats like browser fingerprinting, traffic analysis, or state-level surveillance. Use this alongside — not instead of — established privacy tools.
@@ -21,22 +25,18 @@ Companies like Palantir aggregate public data across platforms. Data brokers sel
 
 ## Installation
 
-Requires Python 3.11+.
+Requires Python 3.11+ and [uv](https://docs.astral.sh/uv/).
 
 ```bash
 # Clone the repository
 git clone https://github.com/your-username/dont-track-me.git
 cd dont-track-me
 
-# Create a virtual environment
-python3 -m venv .venv
-source .venv/bin/activate
-
 # Install with all optional dependencies
-pip install -e ".[all]"
+uv sync --extra all
 
 # Or install with development dependencies (includes test tools)
-pip install -e ".[dev]"
+uv sync --extra dev
 ```
 
 ### Minimal install
@@ -44,16 +44,16 @@ pip install -e ".[dev]"
 If you only need the core modules (dns, headers, search noise, social noise):
 
 ```bash
-pip install -e .
+uv sync
 ```
 
-The metadata module requires `Pillow` and `pypdf` — install them via `pip install -e ".[metadata]"` or `pip install -e ".[all]"`.
+The metadata module requires `Pillow` and `pypdf` — install them via `uv sync --extra metadata` or `uv sync --extra all`.
 
 The fingerprint module's core works without dependencies. For enhanced JS-based fingerprint measurement, install Playwright:
 
 ```bash
-pip install -e ".[fingerprint]"
-playwright install chromium
+uv sync --extra fingerprint
+uv run playwright install chromium
 ```
 
 ### API modules (Reddit, YouTube)
@@ -62,9 +62,9 @@ The Reddit and YouTube modules connect to real APIs to audit your account and ap
 
 ```bash
 # Install with API module dependencies
-pip install -e ".[social-api]"    # Both Reddit + YouTube
-pip install -e ".[reddit]"        # Reddit only
-pip install -e ".[youtube]"       # YouTube only
+uv sync --extra social-api    # Both Reddit + YouTube
+uv sync --extra reddit         # Reddit only
+uv sync --extra youtube        # YouTube only
 ```
 
 #### Setting up Reddit API credentials
@@ -278,6 +278,7 @@ dtm info secrets         # How credentials leak from your local files
 dtm info ssh             # How SSH keys affect your security posture
 dtm info certificates    # How TLS trust stores can be compromised
 dtm info app_permissions # How macOS app permissions expose your privacy
+dtm info location        # How location data leaks through Wi-Fi, timezone, and permissions
 ```
 
 ### Score — Your privacy at a glance
@@ -306,6 +307,7 @@ Returns a weighted score from 0 (fully exposed) to 100 (fully protected) with a 
 | **ssh** | Audits SSH key algorithm strength, passphrase protection, key age, agent forwarding, and known_hosts fingerprinting | [SSH Key Hygiene — Your Cryptographic Identity](src/dont_track_me/modules/ssh/info.md) |
 | **certificates** | Audits system TLS trust store for expired, weak, or suspicious CAs (CNNIC, WoSign, DarkMatter); checks TLS version support | [TLS Certificates — The Foundation of Internet Trust](src/dont_track_me/modules/certificates/info.md) |
 | **app_permissions** | Audits macOS TCC database for over-permissioned apps (camera, microphone, accessibility, full disk access, screen recording) | [macOS App Permissions — The Keys to Your Digital Life](src/dont_track_me/modules/app_permissions/info.md) |
+| **location** | Audits Wi-Fi SSID history, timezone vs VPN mismatch, and macOS Location Services grants for location data leakage | [Location Data Leakage](src/dont_track_me/modules/location/info.md) |
 
 ### API modules (authenticated)
 
@@ -374,14 +376,15 @@ src/dont_track_me/
     ├── secrets/          # Local secrets exposure audit
     ├── ssh/              # SSH key hygiene audit
     ├── certificates/     # TLS certificate trust audit
-    └── app_permissions/  # macOS TCC permission audit
+    ├── app_permissions/  # macOS TCC permission audit
+    └── location/         # Location data leakage audit (Wi-Fi, timezone, TCC)
 ```
 
 ## Running tests
 
 ```bash
-pip install -e ".[dev]"
-pytest -v
+uv sync --extra dev
+uv run pytest -v
 ```
 
 ## Roadmap
@@ -390,26 +393,25 @@ Future modules, ordered by priority:
 
 ### Defensive
 
-1. **location** — Location data leakage audit (Wi-Fi SSID history, location services permissions, timezone vs VPN mismatch detection)
-2. **network** — Local network exposure (mDNS/Bonjour hostname broadcasting, open ports, UPnP, ARP visibility on shared networks)
-3. **bluetooth** — Bluetooth trackability (discoverability state, paired device history, BLE beacon exposure used by retail/airports)
-4. **clipboard** — Clipboard privacy (clipboard manager plaintext storage, clipboard access permissions, clipboard-sniffing app detection)
-5. **prism_exposure** — PRISM surveillance exposure audit (detect email accounts, cloud sync clients, messaging apps, browsers, and password managers linked to PRISM-participating companies — recommend privacy-focused alternatives from [PRISM Break](https://prism-break.org/))
-6. **behavior** — Behavioral fingerprinting detection (typing/mouse patterns — research-grade, high effort)
+1. **network** — Local network exposure (mDNS/Bonjour hostname broadcasting, open ports, UPnP, ARP visibility on shared networks)
+2. **bluetooth** — Bluetooth trackability (discoverability state, paired device history, BLE beacon exposure used by retail/airports)
+3. **clipboard** — Clipboard privacy (clipboard manager plaintext storage, clipboard access permissions, clipboard-sniffing app detection)
+4. **prism_exposure** — PRISM surveillance exposure audit (detect email accounts, cloud sync clients, messaging apps, browsers, and password managers linked to PRISM-participating companies — recommend privacy-focused alternatives from [PRISM Break](https://prism-break.org/))
+5. **behavior** — Behavioral fingerprinting detection (typing/mouse patterns — research-grade, high effort)
 
 ### Offensive
 
-7. **browse_noise** — Browsing history noise injection (open decoy URLs across diverse categories to dilute browsing profiles)
-8. **email_noise** — Newsletter subscription noise (subscribe to diverse mailing lists to poison email interest profiles)
+6. **browse_noise** — Browsing history noise injection (open decoy URLs across diverse categories to dilute browsing profiles)
+7. **email_noise** — Newsletter subscription noise (subscribe to diverse mailing lists to poison email interest profiles)
 
 ### Platform-specific
 
-9. **linkedin** — LinkedIn privacy checklist (visibility settings, activity broadcasts, ad targeting, third-party data sharing)
+8. **linkedin** — LinkedIn privacy checklist (visibility settings, activity broadcasts, ad targeting, third-party data sharing)
 
 ### Cross-cutting
 
-10. **summary** — Cross-module correlation insights (connect dots across modules: "DNS leaks + unique fingerprint = identifiable even with VPN")
-11. **export** — Data portability and trending (structured JSON/CSV export, score diffing over time, periodic re-audit)
+9. **summary** — Cross-module correlation insights (connect dots across modules: "DNS leaks + unique fingerprint = identifiable even with VPN")
+10. **export** — Data portability and trending (structured JSON/CSV export, score diffing over time, periodic re-audit)
 
 ### Enhancements to existing modules
 
@@ -420,7 +422,6 @@ Future modules, ordered by priority:
 - **dns** — Flag PRISM-adjacent DNS resolvers (Google DNS 8.8.8.8, OpenDNS 208.67.222.222) and recommend privacy-focused alternatives (dnscrypt-proxy, Mullvad DNS)
 - **email** — Flag messages routed through PRISM-participating servers (Gmail, Outlook, Yahoo) based on Received headers; add IMAP cloud scanning (connect to Gmail/Outlook/any provider via IMAP to scan for tracking pixels without exporting .eml files — read-only, credentials in system keyring)
 - **metadata** — Flag GPS/location EXIF data as high-risk for aggregation (photo location + timestamp = movement pattern for Palantir-style systems)
-- **location** *(planned)* — Add ALPR awareness: educational content about license plate reader networks and physical movement surveillance
 
 ### Research references
 

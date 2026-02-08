@@ -25,10 +25,10 @@ tests/
 
 ## Commands
 
-- **Lint**: `ruff check src/ tests/`
-- **Tests**: `pytest -q` (386 tests, ~1.8s)
-- **Install dev**: `pip install -e ".[dev]"`
-- **Run CLI**: `dtm status`, `dtm audit`, `dtm score`, `dtm protect`, `dtm noise search`, `dtm noise social`
+- **Lint**: `uv run ruff check src/ tests/`
+- **Tests**: `uv run pytest -q` (400 tests, ~1.8s)
+- **Install dev**: `uv sync --extra dev`
+- **Run CLI**: `uv run dtm status`, `uv run dtm audit`, `uv run dtm score`, `uv run dtm protect`, `uv run dtm noise search`, `uv run dtm noise social`
 
 ## Ruff config
 
