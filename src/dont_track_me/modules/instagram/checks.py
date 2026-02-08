@@ -80,6 +80,10 @@ PRIVACY_CHECKS: list[PrivacyCheck] = [
         ),
         threat_level=ThreatLevel.HIGH,
         remediation="Settings > Security > Apps and Websites > remove all unnecessary apps",
+        technical_countermeasure=(
+            "Audit connected apps from a browser at "
+            "https://www.instagram.com/accounts/manage_access/ — not the mobile app."
+        ),
         category="data_sharing",
     ),
     PrivacyCheck(
@@ -93,6 +97,10 @@ PRIVACY_CHECKS: list[PrivacyCheck] = [
         ),
         threat_level=ThreatLevel.HIGH,
         remediation="Settings > Accounts Center > Ad Preferences > Ad Settings > limit personalization",
+        technical_countermeasure=(
+            "Block connect.facebook.net and pixel.facebook.com via "
+            "'dtm protect social --apply'. Enable Firefox ETP Strict mode."
+        ),
         category="data_sharing",
     ),
     PrivacyCheck(
@@ -109,6 +117,10 @@ PRIVACY_CHECKS: list[PrivacyCheck] = [
         remediation=(
             "Settings > Accounts Center > Your information and permissions > "
             "Off-Facebook Activity > Clear history and disconnect"
+        ),
+        technical_countermeasure=(
+            "Install uBlock Origin to block Meta's tracking pixels across the web. "
+            "Use Firefox Multi-Account Containers to isolate Instagram."
         ),
         category="data_sharing",
     ),
@@ -139,6 +151,9 @@ PRIVACY_CHECKS: list[PrivacyCheck] = [
         ),
         threat_level=ThreatLevel.MEDIUM,
         remediation="Settings > Security > Search history > Clear all",
+        technical_countermeasure=(
+            "Run 'dtm protect cookies --apply' to delete Instagram tracking cookies locally."
+        ),
         category="data_sharing",
     ),
     # --- security ---
@@ -168,8 +183,7 @@ PRIVACY_CHECKS: list[PrivacyCheck] = [
         ),
         threat_level=ThreatLevel.MEDIUM,
         remediation=(
-            "Settings > Accounts Center > Password and Security > "
-            "Where you're logged in > review"
+            "Settings > Accounts Center > Password and Security > Where you're logged in > review"
         ),
         category="security",
     ),

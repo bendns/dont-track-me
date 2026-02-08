@@ -184,6 +184,8 @@ Rate limited to stay within YouTube's free 10K daily quota (~200 subscribes/day)
 
 These platforms' APIs don't allow reading or modifying privacy settings programmatically. Instead, these modules use interactive checklists — answer questions about your current settings and get a personalized score with step-by-step hardening instructions.
 
+Platforms can't be trusted to honor their own privacy toggles ([Facebook was fined $5B by the FTC](https://www.ftc.gov/news-events/news/press-releases/2019/07/ftc-imposes-5-billion-penalty-sweeping-new-privacy-restrictions-facebook) for deceiving users about privacy controls, [Google settled for $391.5M with 40 states](https://www.njoag.gov/forty-attorneys-general-announce-historic-settlement-with-google-over-location-tracking-practices/) over location tracking that continued after users disabled it). Where applicable, checks include **technical countermeasures** — platform-independent enforcement steps like DNS-level blocking, browser extension recommendations, cookie deletion via `dtm protect social/cookies`, and Firefox hardening via `dtm protect fingerprint`.
+
 ```bash
 dtm audit instagram                  # Educational findings (default score)
 dtm audit instagram -i               # Interactive checklist — personalized score

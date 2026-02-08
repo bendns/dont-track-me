@@ -25,6 +25,7 @@ class PrivacyCheck(BaseModel):
     threat_level: ThreatLevel
     remediation: str
     category: str  # "visibility", "data_sharing", "security"
+    technical_countermeasure: str | None = None
     safe_answer: bool = True
 
 
@@ -86,14 +87,16 @@ async def protect_checklist_module(
             answer = responses.get(check.id)
             is_safe = answer == check.safe_answer if answer is not None else False
             if not is_safe:
-                actions.append(
-                    f"[{check.threat_level.value.upper()}] {check.remediation}"
-                )
+                actions.append(f"[{check.threat_level.value.upper()}] {check.remediation}")
+                if check.technical_countermeasure:
+                    actions.append(f"  >> {check.technical_countermeasure}")
     else:
         actions.append(f"--- {display_name} Privacy Hardening Guide ---")
         for check in checks:
             actions.append(f"[{check.threat_level.value.upper()}] {check.question}")
             actions.append(f"  {check.remediation}")
+            if check.technical_countermeasure:
+                actions.append(f"  >> {check.technical_countermeasure}")
 
     if not actions:
         actions.append(f"All {display_name} privacy settings are properly configured.")

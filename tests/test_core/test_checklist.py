@@ -85,6 +85,30 @@ def test_empty_responses():
     assert len(findings) == 3
 
 
+def test_technical_countermeasure_optional():
+    """Technical countermeasure field is optional and defaults to None."""
+    check = PrivacyCheck(
+        id="t",
+        question="Q?",
+        description="D",
+        threat_level=ThreatLevel.HIGH,
+        remediation="Fix",
+        category="security",
+    )
+    assert check.technical_countermeasure is None
+
+    check_with = PrivacyCheck(
+        id="t2",
+        question="Q?",
+        description="D",
+        threat_level=ThreatLevel.HIGH,
+        remediation="Fix",
+        category="security",
+        technical_countermeasure="Block at DNS level",
+    )
+    assert check_with.technical_countermeasure == "Block at DNS level"
+
+
 def test_safe_answer_false():
     """Check with safe_answer=False should score safe when user answers False."""
     checks = [

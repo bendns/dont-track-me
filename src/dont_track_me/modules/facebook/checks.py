@@ -87,6 +87,10 @@ PRIVACY_CHECKS: list[PrivacyCheck] = [
             "Settings > Your Facebook Information > Off-Facebook Activity > "
             "Clear history > Disconnect future activity"
         ),
+        technical_countermeasure=(
+            "Block connect.facebook.net and pixel.facebook.com via "
+            "'dtm protect social --apply'. Install uBlock Origin to block Meta pixels on third-party sites."
+        ),
         category="data_sharing",
     ),
     PrivacyCheck(
@@ -100,6 +104,10 @@ PRIVACY_CHECKS: list[PrivacyCheck] = [
         ),
         threat_level=ThreatLevel.HIGH,
         remediation="Settings > Ads > Ad Settings > Data about your activity from partners > Not allowed",
+        technical_countermeasure=(
+            "Run 'dtm protect social --apply' to delete Meta advertising cookies. "
+            "Enable Firefox ETP Strict mode to block cross-site trackers."
+        ),
         category="data_sharing",
     ),
     PrivacyCheck(
@@ -113,6 +121,9 @@ PRIVACY_CHECKS: list[PrivacyCheck] = [
         ),
         threat_level=ThreatLevel.HIGH,
         remediation="Settings > Ads > Ad Settings > Categories used to reach you > remove all",
+        technical_countermeasure=(
+            "Block Facebook tracking domains at DNS level using Pi-hole, NextDNS, or AdGuard DNS."
+        ),
         category="data_sharing",
     ),
     PrivacyCheck(
@@ -128,6 +139,10 @@ PRIVACY_CHECKS: list[PrivacyCheck] = [
         remediation=(
             "Settings > Ads > Ad Settings > Audience-based advertising > "
             "review and remove advertisers"
+        ),
+        technical_countermeasure=(
+            "Use Firefox Multi-Account Containers to isolate Facebook, "
+            "preventing cross-site behavioral tracking."
         ),
         category="data_sharing",
     ),
@@ -158,6 +173,10 @@ PRIVACY_CHECKS: list[PrivacyCheck] = [
         ),
         threat_level=ThreatLevel.HIGH,
         remediation="Settings > Location > Location History > toggle OFF",
+        technical_countermeasure=(
+            "Revoke location permission for the Facebook app at OS level "
+            "(macOS: System Settings > Privacy & Security > Location Services)."
+        ),
         category="data_sharing",
     ),
     PrivacyCheck(
@@ -171,8 +190,7 @@ PRIVACY_CHECKS: list[PrivacyCheck] = [
         ),
         threat_level=ThreatLevel.HIGH,
         remediation=(
-            "Settings > Your Facebook Information > Upload contacts > "
-            "disable on all devices"
+            "Settings > Your Facebook Information > Upload contacts > disable on all devices"
         ),
         category="data_sharing",
     ),
@@ -187,9 +205,7 @@ PRIVACY_CHECKS: list[PrivacyCheck] = [
             "complete data archive."
         ),
         threat_level=ThreatLevel.HIGH,
-        remediation=(
-            "Settings > Security and Login > Two-Factor Authentication > enable"
-        ),
+        remediation=("Settings > Security and Login > Two-Factor Authentication > enable"),
         category="security",
     ),
     PrivacyCheck(
@@ -202,8 +218,7 @@ PRIVACY_CHECKS: list[PrivacyCheck] = [
         ),
         threat_level=ThreatLevel.MEDIUM,
         remediation=(
-            "Settings > Security and Login > "
-            "Get alerts about unrecognized logins > enable"
+            "Settings > Security and Login > Get alerts about unrecognized logins > enable"
         ),
         category="security",
     ),

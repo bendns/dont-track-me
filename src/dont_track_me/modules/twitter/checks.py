@@ -102,6 +102,10 @@ PRIVACY_CHECKS: list[PrivacyCheck] = [
         remediation=(
             "Settings > Privacy and safety > Ads preferences > Personalized ads > toggle OFF"
         ),
+        technical_countermeasure=(
+            "Block analytics.twitter.com and static.ads-twitter.com via "
+            "'dtm protect social --apply' or your hosts file."
+        ),
         category="data_sharing",
     ),
     PrivacyCheck(
@@ -116,6 +120,10 @@ PRIVACY_CHECKS: list[PrivacyCheck] = [
         threat_level=ThreatLevel.HIGH,
         remediation=(
             "Settings > Privacy and safety > Ads preferences > Inferred identity > toggle OFF"
+        ),
+        technical_countermeasure=(
+            "Use Firefox Multi-Account Containers to isolate Twitter. "
+            "Run 'dtm protect fingerprint --apply' to enable resistFingerprinting."
         ),
         category="data_sharing",
     ),
@@ -133,6 +141,10 @@ PRIVACY_CHECKS: list[PrivacyCheck] = [
             "Settings > Privacy and safety > Off-Twitter activity > "
             "Allow use of where you see Twitter content across the web > toggle OFF"
         ),
+        technical_countermeasure=(
+            "Install uBlock Origin to block Twitter's conversion pixel on third-party sites. "
+            "Enable Firefox Enhanced Tracking Protection (Strict mode)."
+        ),
         category="data_sharing",
     ),
     PrivacyCheck(
@@ -148,6 +160,10 @@ PRIVACY_CHECKS: list[PrivacyCheck] = [
         remediation=(
             "Settings > Privacy and safety > Ads preferences > "
             "Data sharing with business partners > toggle OFF"
+        ),
+        technical_countermeasure=(
+            "Block platform.twitter.com via hosts file, Pi-hole, or NextDNS "
+            "to prevent partner data matching."
         ),
         category="data_sharing",
     ),
@@ -165,6 +181,10 @@ PRIVACY_CHECKS: list[PrivacyCheck] = [
             "Settings > Privacy and safety > Discoverability and contacts > "
             "Sync address book contacts > toggle OFF. "
             "Also: Manage contacts > delete all uploaded contacts."
+        ),
+        technical_countermeasure=(
+            "Use the web browser instead of the mobile app — "
+            "mobile apps can bypass network-level controls for contact upload."
         ),
         category="data_sharing",
     ),

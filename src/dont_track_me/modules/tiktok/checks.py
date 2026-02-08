@@ -16,8 +16,7 @@ PRIVACY_CHECKS: list[PrivacyCheck] = [
         ),
         threat_level=ThreatLevel.CRITICAL,
         remediation=(
-            "Profile > Menu (\u2261) > Settings and Privacy > Privacy > "
-            "Private Account > toggle ON"
+            "Profile > Menu (\u2261) > Settings and Privacy > Privacy > Private Account > toggle ON"
         ),
         category="visibility",
         safe_answer=True,
@@ -31,8 +30,7 @@ PRIVACY_CHECKS: list[PrivacyCheck] = [
         ),
         threat_level=ThreatLevel.HIGH,
         remediation=(
-            "Settings and Privacy > Privacy > Suggest your account to others > "
-            "disable all toggles"
+            "Settings and Privacy > Privacy > Suggest your account to others > disable all toggles"
         ),
         category="visibility",
         safe_answer=True,
@@ -46,8 +44,7 @@ PRIVACY_CHECKS: list[PrivacyCheck] = [
         ),
         threat_level=ThreatLevel.MEDIUM,
         remediation=(
-            "Settings and Privacy > Privacy > Duet / Stitch > "
-            'select "Friends" or "No one"'
+            'Settings and Privacy > Privacy > Duet / Stitch > select "Friends" or "No one"'
         ),
         category="visibility",
         safe_answer=True,
@@ -61,8 +58,7 @@ PRIVACY_CHECKS: list[PrivacyCheck] = [
         ),
         threat_level=ThreatLevel.MEDIUM,
         remediation=(
-            "Settings and Privacy > Privacy > Direct Messages > "
-            'select "Friends" or "No one"'
+            'Settings and Privacy > Privacy > Direct Messages > select "Friends" or "No one"'
         ),
         category="visibility",
         safe_answer=True,
@@ -83,8 +79,7 @@ PRIVACY_CHECKS: list[PrivacyCheck] = [
         id="activity_status",
         question="Is activity status disabled?",
         description=(
-            "Shows contacts when you were last active, enabling behavioral "
-            "tracking and stalking"
+            "Shows contacts when you were last active, enabling behavioral tracking and stalking"
         ),
         threat_level=ThreatLevel.MEDIUM,
         remediation=("Settings and Privacy > Privacy > Activity Status > toggle OFF"),
@@ -101,8 +96,11 @@ PRIVACY_CHECKS: list[PrivacyCheck] = [
         ),
         threat_level=ThreatLevel.HIGH,
         remediation=(
-            "Settings and Privacy > Privacy > Ads and Data > "
-            "Personalized Ads > toggle OFF"
+            "Settings and Privacy > Privacy > Ads and Data > Personalized Ads > toggle OFF"
+        ),
+        technical_countermeasure=(
+            "Block analytics.tiktok.com via 'dtm protect social --apply'. "
+            "Use Pi-hole or NextDNS for network-wide blocking."
         ),
         category="data_sharing",
         safe_answer=True,
@@ -116,8 +114,11 @@ PRIVACY_CHECKS: list[PrivacyCheck] = [
         ),
         threat_level=ThreatLevel.MEDIUM,
         remediation=(
-            "Settings and Privacy > Privacy > Ads and Data > "
-            "Ad Interest Categories > remove all"
+            "Settings and Privacy > Privacy > Ads and Data > Ad Interest Categories > remove all"
+        ),
+        technical_countermeasure=(
+            "Run 'dtm protect cookies --apply' to delete TikTok tracking cookies "
+            "that store interest profiles."
         ),
         category="data_sharing",
         safe_answer=True,
@@ -131,8 +132,7 @@ PRIVACY_CHECKS: list[PrivacyCheck] = [
         ),
         threat_level=ThreatLevel.MEDIUM,
         remediation=(
-            "Settings and Privacy > Privacy > Personalization and Data > "
-            "Download your data"
+            "Settings and Privacy > Privacy > Personalization and Data > Download your data"
         ),
         category="data_sharing",
         safe_answer=True,
@@ -149,6 +149,10 @@ PRIVACY_CHECKS: list[PrivacyCheck] = [
             "Settings and Privacy > Privacy > Ads and Data > "
             "Ads from TikTok's Advertising Partners > OFF"
         ),
+        technical_countermeasure=(
+            "Install uBlock Origin to block third-party data broker scripts "
+            "that feed TikTok your off-platform activity."
+        ),
         category="data_sharing",
         safe_answer=True,
     ),
@@ -163,6 +167,10 @@ PRIVACY_CHECKS: list[PrivacyCheck] = [
         remediation=(
             "Settings and Privacy > Privacy > Ads and Data > "
             "Off-TikTok Activity > manage and disconnect"
+        ),
+        technical_countermeasure=(
+            "Block TikTok analytics domains at DNS level using "
+            "AdGuard DNS (94.140.14.14) or Mullvad DNS (194.242.2.4)."
         ),
         category="data_sharing",
         safe_answer=True,

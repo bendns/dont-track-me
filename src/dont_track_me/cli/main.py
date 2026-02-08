@@ -98,6 +98,8 @@ def _run_interactive_checklist(checks: list[Any], module_name: str) -> dict[str,
         )
         console.print(f"  [dim]{check.description}[/dim]")
         console.print(f"  [dim]Fix: {check.remediation}[/dim]")
+        if check.technical_countermeasure:
+            console.print(f"  [dim]Enforce: {check.technical_countermeasure}[/dim]")
 
         while True:
             answer = click.prompt("  (y/n)", type=str, default="").strip().lower()
