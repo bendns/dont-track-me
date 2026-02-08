@@ -274,6 +274,9 @@ dtm info email           # How email tracking pixels spy on you
 dtm info cookies         # How third-party cookies track you across the web
 dtm info fingerprint     # How browser fingerprinting identifies you without cookies
 dtm info social          # How social media trackers follow you everywhere
+dtm info secrets         # How credentials leak from your local files
+dtm info ssh             # How SSH keys affect your security posture
+dtm info certificates    # How TLS trust stores can be compromised
 ```
 
 ### Score — Your privacy at a glance
@@ -298,6 +301,9 @@ Returns a weighted score from 0 (fully exposed) to 100 (fully protected) with a 
 | **cookies** | Analyzes browser cookie databases (Chrome/Firefox) for third-party tracking cookies; deletes tracker cookies on protect | [Browser Cookies & Third-Party Tracking](src/dont_track_me/modules/cookies/info.md) |
 | **fingerprint** | Detects browser fingerprinting exposure (Canvas, WebGL, fonts, extensions); optional Playwright-based JS measurement; hardens Firefox via user.js | [Browser Fingerprinting](src/dont_track_me/modules/fingerprint/info.md) |
 | **social** | Detects social media tracker cookies, checks browser tracking protection (ETP/Shields), anti-tracker extensions, hosts-file blocking, and DNS-level blocking | [Social Media Trackers](src/dont_track_me/modules/social/info.md) |
+| **secrets** | Scans for leaked credentials in `.env` files, `.git/config`, shell history, unencrypted SSH keys, AWS credentials, and config files | [Local Secrets Exposure — Your Credentials Are Probably Leaking](src/dont_track_me/modules/secrets/info.md) |
+| **ssh** | Audits SSH key algorithm strength, passphrase protection, key age, agent forwarding, and known_hosts fingerprinting | [SSH Key Hygiene — Your Cryptographic Identity](src/dont_track_me/modules/ssh/info.md) |
+| **certificates** | Audits system TLS trust store for expired, weak, or suspicious CAs (CNNIC, WoSign, DarkMatter); checks TLS version support | [TLS Certificates — The Foundation of Internet Trust](src/dont_track_me/modules/certificates/info.md) |
 
 ### API modules (authenticated)
 
@@ -362,7 +368,10 @@ src/dont_track_me/
     ├── instagram/        # Instagram privacy checklist (interactive)
     ├── tiktok/           # TikTok privacy checklist (interactive)
     ├── facebook/         # Facebook privacy checklist (interactive)
-    └── twitter/          # Twitter/X privacy checklist (interactive)
+    ├── twitter/          # Twitter/X privacy checklist (interactive)
+    ├── secrets/          # Local secrets exposure audit
+    ├── ssh/              # SSH key hygiene audit
+    └── certificates/     # TLS certificate trust audit
 ```
 
 ## Running tests
@@ -378,30 +387,27 @@ Future modules, ordered by priority:
 
 ### Defensive
 
-1. **secrets** — Local secrets exposure audit (leaked credentials in `.env`, `.git/config`, shell history, plaintext API keys, browser saved passwords)
-2. **ssh** — SSH key hygiene (key age, algorithm strength, `authorized_keys` audit, agent forwarding, `known_hosts` fingerprinting vector)
-3. **certificates** — TLS/SSL certificate audit (system trust store, browser cert stores, expired/weak/untrusted CAs, self-signed certs)
-4. **app_permissions** — macOS app permission audit (TCC database: camera, microphone, location, contacts, screen recording — flag over-permissioned apps)
-5. **location** — Location data leakage audit (Wi-Fi SSID history, location services permissions, timezone vs VPN mismatch detection)
-6. **network** — Local network exposure (mDNS/Bonjour hostname broadcasting, open ports, UPnP, ARP visibility on shared networks)
-7. **bluetooth** — Bluetooth trackability (discoverability state, paired device history, BLE beacon exposure used by retail/airports)
-8. **clipboard** — Clipboard privacy (clipboard manager plaintext storage, clipboard access permissions, clipboard-sniffing app detection)
-9. **prism_exposure** — PRISM surveillance exposure audit (detect email accounts, cloud sync clients, messaging apps, browsers, and password managers linked to PRISM-participating companies — recommend privacy-focused alternatives from [PRISM Break](https://prism-break.org/))
-10. **behavior** — Behavioral fingerprinting detection (typing/mouse patterns — research-grade, high effort)
+1. **app_permissions** — macOS app permission audit (TCC database: camera, microphone, location, contacts, screen recording — flag over-permissioned apps)
+2. **location** — Location data leakage audit (Wi-Fi SSID history, location services permissions, timezone vs VPN mismatch detection)
+3. **network** — Local network exposure (mDNS/Bonjour hostname broadcasting, open ports, UPnP, ARP visibility on shared networks)
+4. **bluetooth** — Bluetooth trackability (discoverability state, paired device history, BLE beacon exposure used by retail/airports)
+5. **clipboard** — Clipboard privacy (clipboard manager plaintext storage, clipboard access permissions, clipboard-sniffing app detection)
+6. **prism_exposure** — PRISM surveillance exposure audit (detect email accounts, cloud sync clients, messaging apps, browsers, and password managers linked to PRISM-participating companies — recommend privacy-focused alternatives from [PRISM Break](https://prism-break.org/))
+7. **behavior** — Behavioral fingerprinting detection (typing/mouse patterns — research-grade, high effort)
 
 ### Offensive
 
-11. **browse_noise** — Browsing history noise injection (open decoy URLs across diverse categories to dilute browsing profiles)
-12. **email_noise** — Newsletter subscription noise (subscribe to diverse mailing lists to poison email interest profiles)
+8. **browse_noise** — Browsing history noise injection (open decoy URLs across diverse categories to dilute browsing profiles)
+9. **email_noise** — Newsletter subscription noise (subscribe to diverse mailing lists to poison email interest profiles)
 
 ### Platform-specific
 
-13. **linkedin** — LinkedIn privacy checklist (visibility settings, activity broadcasts, ad targeting, third-party data sharing)
+10. **linkedin** — LinkedIn privacy checklist (visibility settings, activity broadcasts, ad targeting, third-party data sharing)
 
 ### Cross-cutting
 
-14. **summary** — Cross-module correlation insights (connect dots across modules: "DNS leaks + unique fingerprint = identifiable even with VPN")
-15. **export** — Data portability and trending (structured JSON/CSV export, score diffing over time, periodic re-audit)
+11. **summary** — Cross-module correlation insights (connect dots across modules: "DNS leaks + unique fingerprint = identifiable even with VPN")
+12. **export** — Data portability and trending (structured JSON/CSV export, score diffing over time, periodic re-audit)
 
 ### Enhancements to existing modules
 
@@ -410,7 +416,7 @@ Future modules, ordered by priority:
 - **ssh** — Add post-quantum readiness check (flag RSA/ECDSA keys vulnerable to quantum computing, recommend Ed25519 or PQ algorithms)
 - **certificates** — Add post-quantum cipher suite audit (flag TLS configs using quantum-vulnerable crypto, check GPG key types)
 - **dns** — Flag PRISM-adjacent DNS resolvers (Google DNS 8.8.8.8, OpenDNS 208.67.222.222) and recommend privacy-focused alternatives (dnscrypt-proxy, Mullvad DNS)
-- **email** — Flag messages routed through PRISM-participating servers (Gmail, Outlook, Yahoo) based on Received headers
+- **email** — Flag messages routed through PRISM-participating servers (Gmail, Outlook, Yahoo) based on Received headers; add IMAP cloud scanning (connect to Gmail/Outlook/any provider via IMAP to scan for tracking pixels without exporting .eml files — read-only, credentials in system keyring)
 - **metadata** — Flag GPS/location EXIF data as high-risk for aggregation (photo location + timestamp = movement pattern for Palantir-style systems)
 - **location** *(planned)* — Add ALPR awareness: educational content about license plate reader networks and physical movement surveillance
 
