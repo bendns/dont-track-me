@@ -258,6 +258,7 @@ dtm info youtube         # How YouTube profiles your subscriptions
 dtm info instagram       # How Instagram tracks you
 dtm info tiktok          # How TikTok profiles your behavior
 dtm info facebook        # How Facebook builds your shadow profile
+dtm info webrtc          # How WebRTC leaks your real IP behind a VPN
 ```
 
 ### Score — Your privacy at a glance
@@ -277,6 +278,7 @@ Returns a weighted score from 0 (fully exposed) to 100 (fully protected) with a 
 | **dns** | Detects DNS leaks, tracking DNS providers (Google, OpenDNS), and lack of encrypted DNS | [DNS Tracking — Your Browsing History in Plain Text](src/dont_track_me/modules/dns/info.md) |
 | **metadata** | Scans images for GPS/EXIF data and PDFs for author metadata; strips them on protect | [Metadata Leakage — Hidden Data in Your Files](src/dont_track_me/modules/metadata/info.md) |
 | **headers** | Analyzes HTTP headers (User-Agent, Accept-Language, Referer) for identity leaks | [HTTP Header Tracking — Your Browser's Business Card](src/dont_track_me/modules/headers/info.md) |
+| **webrtc** | Detects WebRTC IP leaks via STUN server queries that bypass VPNs | [WebRTC IP Leaks — Your VPN's Blind Spot](src/dont_track_me/modules/webrtc/info.md) |
 
 ### API modules (authenticated)
 
@@ -332,6 +334,7 @@ src/dont_track_me/
     │   └── data/         #   Per-country account YAML files (us.yaml, fr.yaml)
     ├── reddit/           # Reddit privacy audit & protection (API)
     ├── youtube/          # YouTube subscription audit & diversification (API)
+    ├── webrtc/           # WebRTC IP leak detection via STUN queries
     ├── instagram/        # Instagram privacy checklist (interactive)
     ├── tiktok/           # TikTok privacy checklist (interactive)
     └── facebook/         # Facebook privacy checklist (interactive)
@@ -346,14 +349,13 @@ pytest -v
 
 ## Roadmap
 
-Future modules planned:
+Future modules, ordered by priority:
 
-- **cookies** — Third-party cookie analysis and cleanup
-- **fingerprint** — Browser fingerprint detection and randomization (Playwright-based)
-- **social** — Social media tracker/pixel blocking
-- **webrtc** — WebRTC IP leak detection
-- **email** — Email tracking pixel detection
-- **behavior** — Behavioral fingerprinting detection (typing/mouse patterns)
+1. **email** — Email tracking pixel detection in `.eml` files (1x1 images, known tracker domains)
+2. **cookies** — Third-party cookie analysis from browser profiles (Chrome/Firefox SQLite databases)
+3. **fingerprint** — Browser fingerprint detection and randomization (Playwright-based)
+4. **social** — Social media tracker/pixel blocking (lower priority — browser extensions already cover this)
+5. **behavior** — Behavioral fingerprinting detection (typing/mouse patterns — research-grade, high effort)
 
 ## Contributing
 
