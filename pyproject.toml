@@ -19,6 +19,7 @@ dependencies = [
 [project.optional-dependencies]
 dns = ["dnspython>=2.6"]
 metadata = ["Pillow>=10.0", "pypdf>=4.0"]
+fingerprint = ["playwright>=1.40"]
 social-api = ["keyring>=25.0"]
 reddit = ["dont-track-me[social-api]"]
 youtube = ["dont-track-me[social-api]"]

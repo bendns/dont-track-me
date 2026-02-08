@@ -49,6 +49,13 @@ pip install -e .
 
 The metadata module requires `Pillow` and `pypdf` — install them via `pip install -e ".[metadata]"` or `pip install -e ".[all]"`.
 
+The fingerprint module's core works without dependencies. For enhanced JS-based fingerprint measurement, install Playwright:
+
+```bash
+pip install -e ".[fingerprint]"
+playwright install chromium
+```
+
 ### API modules (Reddit, YouTube)
 
 The Reddit and YouTube modules connect to real APIs to audit your account and apply protections. They require OAuth credentials:
@@ -261,6 +268,7 @@ dtm info facebook        # How Facebook builds your shadow profile
 dtm info webrtc          # How WebRTC leaks your real IP behind a VPN
 dtm info email           # How email tracking pixels spy on you
 dtm info cookies         # How third-party cookies track you across the web
+dtm info fingerprint     # How browser fingerprinting identifies you without cookies
 ```
 
 ### Score — Your privacy at a glance
@@ -283,6 +291,7 @@ Returns a weighted score from 0 (fully exposed) to 100 (fully protected) with a 
 | **webrtc** | Detects WebRTC IP leaks via STUN server queries that bypass VPNs | [WebRTC IP Leaks — Your VPN's Blind Spot](src/dont_track_me/modules/webrtc/info.md) |
 | **email** | Detects and strips email tracking pixels (1x1 images, known tracker domains) in .eml files | [Email Tracking Pixels — Someone Knows You Read This](src/dont_track_me/modules/email/info.md) |
 | **cookies** | Analyzes browser cookie databases (Chrome/Firefox) for third-party tracking cookies; deletes tracker cookies on protect | [Browser Cookies & Third-Party Tracking](src/dont_track_me/modules/cookies/info.md) |
+| **fingerprint** | Detects browser fingerprinting exposure (Canvas, WebGL, fonts, extensions); optional Playwright-based JS measurement; hardens Firefox via user.js | [Browser Fingerprinting](src/dont_track_me/modules/fingerprint/info.md) |
 
 ### API modules (authenticated)
 
@@ -341,6 +350,7 @@ src/dont_track_me/
     ├── webrtc/           # WebRTC IP leak detection via STUN queries
     ├── email/            # Email tracking pixel detection & stripping
     ├── cookies/          # Browser cookie analysis & tracker cookie removal
+    ├── fingerprint/      # Browser fingerprint detection & hardening
     ├── instagram/        # Instagram privacy checklist (interactive)
     ├── tiktok/           # TikTok privacy checklist (interactive)
     └── facebook/         # Facebook privacy checklist (interactive)
@@ -357,9 +367,8 @@ pytest -v
 
 Future modules, ordered by priority:
 
-1. **fingerprint** — Browser fingerprint detection and randomization (Playwright-based)
-2. **social** — Social media tracker/pixel blocking (lower priority — browser extensions already cover this)
-3. **behavior** — Behavioral fingerprinting detection (typing/mouse patterns — research-grade, high effort)
+1. **social** — Social media tracker/pixel blocking (lower priority — browser extensions already cover this)
+2. **behavior** — Behavioral fingerprinting detection (typing/mouse patterns — research-grade, high effort)
 
 ## Contributing
 
