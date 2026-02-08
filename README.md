@@ -1,6 +1,8 @@
 # dont-track-me
 
 > **Disclaimer:** This entire codebase was generated using Claude (Anthropic). While we've tested it, use it with caution and review the code before relying on it for your privacy.
+>
+> **Scope:** This toolkit is an educational starting point, not a complete privacy solution. Real-world digital protection requires a layered approach — Tor/VPN, hardened browsers (Mullvad, LibreWolf), OS-level isolation (Tails, Qubes), hardware security keys, and operational discipline. The checks and countermeasures here cover common tracking vectors but do not address advanced threats like browser fingerprinting, traffic analysis, or state-level surveillance. Use this alongside — not instead of — established privacy tools.
 
 A modular anti-tracking toolkit that audits how trackable you are online and applies countermeasures. Built for privacy researchers, activists, journalists, and anyone who believes their digital profile shouldn't be weaponized against them.
 
@@ -367,4 +369,4 @@ The module will be auto-discovered — no registration code needed.
 
 ## License
 
-MIT
+All rights reserved. This code is provided for educational purposes only.

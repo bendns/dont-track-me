@@ -12,3 +12,14 @@ venv/
 .coverage
 htmlcov/
 .ruff_cache
+
+# Config files that may contain credentials
+config.toml
+dtm.toml
+*.env
+.env
+.env.*
+
+# OS files
+.DS_Store
+Thumbs.db
