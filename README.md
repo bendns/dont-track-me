@@ -260,6 +260,7 @@ dtm info tiktok          # How TikTok profiles your behavior
 dtm info facebook        # How Facebook builds your shadow profile
 dtm info webrtc          # How WebRTC leaks your real IP behind a VPN
 dtm info email           # How email tracking pixels spy on you
+dtm info cookies         # How third-party cookies track you across the web
 ```
 
 ### Score — Your privacy at a glance
@@ -281,6 +282,7 @@ Returns a weighted score from 0 (fully exposed) to 100 (fully protected) with a 
 | **headers** | Analyzes HTTP headers (User-Agent, Accept-Language, Referer) for identity leaks | [HTTP Header Tracking — Your Browser's Business Card](src/dont_track_me/modules/headers/info.md) |
 | **webrtc** | Detects WebRTC IP leaks via STUN server queries that bypass VPNs | [WebRTC IP Leaks — Your VPN's Blind Spot](src/dont_track_me/modules/webrtc/info.md) |
 | **email** | Detects and strips email tracking pixels (1x1 images, known tracker domains) in .eml files | [Email Tracking Pixels — Someone Knows You Read This](src/dont_track_me/modules/email/info.md) |
+| **cookies** | Analyzes browser cookie databases (Chrome/Firefox) for third-party tracking cookies; deletes tracker cookies on protect | [Browser Cookies & Third-Party Tracking](src/dont_track_me/modules/cookies/info.md) |
 
 ### API modules (authenticated)
 
@@ -338,6 +340,7 @@ src/dont_track_me/
     ├── youtube/          # YouTube subscription audit & diversification (API)
     ├── webrtc/           # WebRTC IP leak detection via STUN queries
     ├── email/            # Email tracking pixel detection & stripping
+    ├── cookies/          # Browser cookie analysis & tracker cookie removal
     ├── instagram/        # Instagram privacy checklist (interactive)
     ├── tiktok/           # TikTok privacy checklist (interactive)
     └── facebook/         # Facebook privacy checklist (interactive)
@@ -354,10 +357,9 @@ pytest -v
 
 Future modules, ordered by priority:
 
-1. **cookies** — Third-party cookie analysis from browser profiles (Chrome/Firefox SQLite databases)
-2. **fingerprint** — Browser fingerprint detection and randomization (Playwright-based)
-3. **social** — Social media tracker/pixel blocking (lower priority — browser extensions already cover this)
-4. **behavior** — Behavioral fingerprinting detection (typing/mouse patterns — research-grade, high effort)
+1. **fingerprint** — Browser fingerprint detection and randomization (Playwright-based)
+2. **social** — Social media tracker/pixel blocking (lower priority — browser extensions already cover this)
+3. **behavior** — Behavioral fingerprinting detection (typing/mouse patterns — research-grade, high effort)
 
 ## Contributing
 
