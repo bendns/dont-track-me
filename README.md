@@ -180,7 +180,7 @@ dtm protect youtube --apply        # Subscribe to diverse channels
 
 Rate limited to stay within YouTube's free 10K daily quota (~200 subscribes/day), with randomized delays between calls.
 
-#### Instagram, TikTok, Facebook — Privacy checklists
+#### Instagram, TikTok, Facebook, Twitter/X — Privacy checklists
 
 These platforms' APIs don't allow reading or modifying privacy settings programmatically. Instead, these modules use interactive checklists — answer questions about your current settings and get a personalized score with step-by-step hardening instructions.
 
@@ -189,6 +189,7 @@ dtm audit instagram                  # Educational findings (default score)
 dtm audit instagram -i               # Interactive checklist — personalized score
 dtm audit tiktok -i                  # Same for TikTok (12 checks)
 dtm audit facebook -i                # Same for Facebook (14 checks)
+dtm audit twitter -i                 # Same for Twitter/X (13 checks)
 dtm protect instagram                # Step-by-step hardening guide
 dtm info instagram                   # How Instagram tracks you
 ```
@@ -265,6 +266,7 @@ dtm info youtube         # How YouTube profiles your subscriptions
 dtm info instagram       # How Instagram tracks you
 dtm info tiktok          # How TikTok profiles your behavior
 dtm info facebook        # How Facebook builds your shadow profile
+dtm info twitter         # How Twitter/X tracks and profiles you
 dtm info webrtc          # How WebRTC leaks your real IP behind a VPN
 dtm info email           # How email tracking pixels spy on you
 dtm info cookies         # How third-party cookies track you across the web
@@ -309,6 +311,7 @@ Returns a weighted score from 0 (fully exposed) to 100 (fully protected) with a 
 | **instagram** | Interactive privacy checklist (12 checks) covering account visibility, ad tracking, and Off-Instagram Activity | [Instagram Tracking — Your Photos Tell More Than You Think](src/dont_track_me/modules/instagram/info.md) |
 | **tiktok** | Interactive privacy checklist (12 checks) covering algorithm profiling, device fingerprinting, and ad data sharing | [TikTok Tracking — The Algorithm Knows You Better Than You Know Yourself](src/dont_track_me/modules/tiktok/info.md) |
 | **facebook** | Interactive privacy checklist (14 checks) covering Off-Facebook Activity, face recognition, and shadow profiles | [Facebook Tracking — The Most Complete Surveillance Machine Ever Built](src/dont_track_me/modules/facebook/info.md) |
+| **twitter** | Interactive privacy checklist (13 checks) covering protected tweets, ad personalization, and off-Twitter activity tracking | [Twitter/X Tracking — Your Tweets Tell More Than You Type](src/dont_track_me/modules/twitter/info.md) |
 
 ### Offensive modules (noise generation)
 
@@ -356,7 +359,8 @@ src/dont_track_me/
     ├── social/           # Social media tracker detection & blocking
     ├── instagram/        # Instagram privacy checklist (interactive)
     ├── tiktok/           # TikTok privacy checklist (interactive)
-    └── facebook/         # Facebook privacy checklist (interactive)
+    ├── facebook/         # Facebook privacy checklist (interactive)
+    └── twitter/          # Twitter/X privacy checklist (interactive)
 ```
 
 ## Running tests
@@ -390,13 +394,12 @@ Future modules, ordered by priority:
 
 ### Platform-specific
 
-13. **twitter** — Twitter/X privacy checklist (protected tweets, location tagging, DM settings, personalization, connected apps)
-14. **linkedin** — LinkedIn privacy checklist (visibility settings, activity broadcasts, ad targeting, third-party data sharing)
+13. **linkedin** — LinkedIn privacy checklist (visibility settings, activity broadcasts, ad targeting, third-party data sharing)
 
 ### Cross-cutting
 
-15. **summary** — Cross-module correlation insights (connect dots across modules: "DNS leaks + unique fingerprint = identifiable even with VPN")
-16. **export** — Data portability and trending (structured JSON/CSV export, score diffing over time, periodic re-audit)
+14. **summary** — Cross-module correlation insights (connect dots across modules: "DNS leaks + unique fingerprint = identifiable even with VPN")
+15. **export** — Data portability and trending (structured JSON/CSV export, score diffing over time, periodic re-audit)
 
 ### Enhancements to existing modules
 

@@ -17,7 +17,7 @@ tests/
 ## Key patterns
 
 - **Modules** extend `BaseModule` (or `OAuthModule` for API-backed ones like reddit/youtube)
-- **Checklist modules** (instagram/tiktok/facebook) use `PrivacyCheck` model + `protect_checklist_module()` from `core/checklist.py`
+- **Checklist modules** (instagram/tiktok/facebook/twitter) use `PrivacyCheck` model + `protect_checklist_module()` from `core/checklist.py`
 - **Auto-discovery**: modules are found at startup via `pkgutil.iter_modules` in `core/registry.py` -- no registration needed
 - **Lazy imports only for optional deps**: `keyring`, `keyring.errors`, `PIL`, `pypdf` are imported inside functions. All other imports go at file top
 - The `registry.py` import of `BaseModule` inside `_discover_modules()` is intentional (avoids circular import)
@@ -26,7 +26,7 @@ tests/
 ## Commands
 
 - **Lint**: `ruff check src/ tests/`
-- **Tests**: `pytest -q` (332 tests, ~1.4s)
+- **Tests**: `pytest -q` (342 tests, ~1.4s)
 - **Install dev**: `pip install -e ".[dev]"`
 - **Run CLI**: `dtm status`, `dtm audit`, `dtm score`, `dtm protect`, `dtm noise search`, `dtm noise social`
 

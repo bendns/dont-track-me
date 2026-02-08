@@ -9,15 +9,13 @@ from dont_track_me.core.checklist import compute_checklist_score
 from dont_track_me.modules.tiktok.checks import PRIVACY_CHECKS
 
 
-async def audit_tiktok(
-    responses: dict[str, bool] | None = None, **kwargs: Any
-) -> AuditResult:
+async def audit_tiktok(responses: dict[str, bool] | None = None, **kwargs: Any) -> AuditResult:
     """Run the TikTok privacy audit.
 
     With *responses*: score the interactive checklist.
     Without: return educational findings about TikTok's tracking practices.
     """
-    if responses:
+    if responses is not None:
         score, findings = compute_checklist_score(PRIVACY_CHECKS, responses)
         return AuditResult(
             module_name="tiktok",

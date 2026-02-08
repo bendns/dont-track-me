@@ -9,15 +9,13 @@ from dont_track_me.core.checklist import compute_checklist_score
 from dont_track_me.modules.instagram.checks import PRIVACY_CHECKS
 
 
-async def audit_instagram(
-    responses: dict[str, bool] | None = None, **kwargs: Any
-) -> AuditResult:
+async def audit_instagram(responses: dict[str, bool] | None = None, **kwargs: Any) -> AuditResult:
     """Audit Instagram privacy settings.
 
     If responses are provided (interactive mode), compute a personalized score.
     Otherwise, return educational findings with a default score.
     """
-    if responses:
+    if responses is not None:
         score, findings = compute_checklist_score(PRIVACY_CHECKS, responses)
         return AuditResult(
             module_name="instagram",

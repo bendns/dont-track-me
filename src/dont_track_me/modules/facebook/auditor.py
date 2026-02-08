@@ -9,15 +9,13 @@ from dont_track_me.core.checklist import compute_checklist_score
 from dont_track_me.modules.facebook.checks import PRIVACY_CHECKS
 
 
-async def audit_facebook(
-    responses: dict[str, bool] | None = None, **kwargs: Any
-) -> AuditResult:
+async def audit_facebook(responses: dict[str, bool] | None = None, **kwargs: Any) -> AuditResult:
     """Audit Facebook privacy settings.
 
     With *responses*: compute a personalized score from the interactive checklist.
     Without: return educational findings about Facebook's surveillance practices.
     """
-    if responses:
+    if responses is not None:
         score, findings = compute_checklist_score(PRIVACY_CHECKS, responses)
         return AuditResult(
             module_name="facebook",
