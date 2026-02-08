@@ -26,7 +26,7 @@ tests/
 ## Commands
 
 - **Lint**: `ruff check src/ tests/`
-- **Tests**: `pytest -q` (343 tests, ~1.4s)
+- **Tests**: `pytest -q` (372 tests, ~1.6s)
 - **Install dev**: `pip install -e ".[dev]"`
 - **Run CLI**: `dtm status`, `dtm audit`, `dtm score`, `dtm protect`, `dtm noise search`, `dtm noise social`
 
