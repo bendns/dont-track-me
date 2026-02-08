@@ -277,6 +277,7 @@ dtm info social          # How social media trackers follow you everywhere
 dtm info secrets         # How credentials leak from your local files
 dtm info ssh             # How SSH keys affect your security posture
 dtm info certificates    # How TLS trust stores can be compromised
+dtm info app_permissions # How macOS app permissions expose your privacy
 ```
 
 ### Score — Your privacy at a glance
@@ -304,6 +305,7 @@ Returns a weighted score from 0 (fully exposed) to 100 (fully protected) with a 
 | **secrets** | Scans for leaked credentials in `.env` files, `.git/config`, shell history, unencrypted SSH keys, AWS credentials, and config files | [Local Secrets Exposure — Your Credentials Are Probably Leaking](src/dont_track_me/modules/secrets/info.md) |
 | **ssh** | Audits SSH key algorithm strength, passphrase protection, key age, agent forwarding, and known_hosts fingerprinting | [SSH Key Hygiene — Your Cryptographic Identity](src/dont_track_me/modules/ssh/info.md) |
 | **certificates** | Audits system TLS trust store for expired, weak, or suspicious CAs (CNNIC, WoSign, DarkMatter); checks TLS version support | [TLS Certificates — The Foundation of Internet Trust](src/dont_track_me/modules/certificates/info.md) |
+| **app_permissions** | Audits macOS TCC database for over-permissioned apps (camera, microphone, accessibility, full disk access, screen recording) | [macOS App Permissions — The Keys to Your Digital Life](src/dont_track_me/modules/app_permissions/info.md) |
 
 ### API modules (authenticated)
 
@@ -371,7 +373,8 @@ src/dont_track_me/
     ├── twitter/          # Twitter/X privacy checklist (interactive)
     ├── secrets/          # Local secrets exposure audit
     ├── ssh/              # SSH key hygiene audit
-    └── certificates/     # TLS certificate trust audit
+    ├── certificates/     # TLS certificate trust audit
+    └── app_permissions/  # macOS TCC permission audit
 ```
 
 ## Running tests
@@ -387,27 +390,26 @@ Future modules, ordered by priority:
 
 ### Defensive
 
-1. **app_permissions** — macOS app permission audit (TCC database: camera, microphone, location, contacts, screen recording — flag over-permissioned apps)
-2. **location** — Location data leakage audit (Wi-Fi SSID history, location services permissions, timezone vs VPN mismatch detection)
-3. **network** — Local network exposure (mDNS/Bonjour hostname broadcasting, open ports, UPnP, ARP visibility on shared networks)
-4. **bluetooth** — Bluetooth trackability (discoverability state, paired device history, BLE beacon exposure used by retail/airports)
-5. **clipboard** — Clipboard privacy (clipboard manager plaintext storage, clipboard access permissions, clipboard-sniffing app detection)
-6. **prism_exposure** — PRISM surveillance exposure audit (detect email accounts, cloud sync clients, messaging apps, browsers, and password managers linked to PRISM-participating companies — recommend privacy-focused alternatives from [PRISM Break](https://prism-break.org/))
-7. **behavior** — Behavioral fingerprinting detection (typing/mouse patterns — research-grade, high effort)
+1. **location** — Location data leakage audit (Wi-Fi SSID history, location services permissions, timezone vs VPN mismatch detection)
+2. **network** — Local network exposure (mDNS/Bonjour hostname broadcasting, open ports, UPnP, ARP visibility on shared networks)
+3. **bluetooth** — Bluetooth trackability (discoverability state, paired device history, BLE beacon exposure used by retail/airports)
+4. **clipboard** — Clipboard privacy (clipboard manager plaintext storage, clipboard access permissions, clipboard-sniffing app detection)
+5. **prism_exposure** — PRISM surveillance exposure audit (detect email accounts, cloud sync clients, messaging apps, browsers, and password managers linked to PRISM-participating companies — recommend privacy-focused alternatives from [PRISM Break](https://prism-break.org/))
+6. **behavior** — Behavioral fingerprinting detection (typing/mouse patterns — research-grade, high effort)
 
 ### Offensive
 
-8. **browse_noise** — Browsing history noise injection (open decoy URLs across diverse categories to dilute browsing profiles)
-9. **email_noise** — Newsletter subscription noise (subscribe to diverse mailing lists to poison email interest profiles)
+7. **browse_noise** — Browsing history noise injection (open decoy URLs across diverse categories to dilute browsing profiles)
+8. **email_noise** — Newsletter subscription noise (subscribe to diverse mailing lists to poison email interest profiles)
 
 ### Platform-specific
 
-10. **linkedin** — LinkedIn privacy checklist (visibility settings, activity broadcasts, ad targeting, third-party data sharing)
+9. **linkedin** — LinkedIn privacy checklist (visibility settings, activity broadcasts, ad targeting, third-party data sharing)
 
 ### Cross-cutting
 
-11. **summary** — Cross-module correlation insights (connect dots across modules: "DNS leaks + unique fingerprint = identifiable even with VPN")
-12. **export** — Data portability and trending (structured JSON/CSV export, score diffing over time, periodic re-audit)
+10. **summary** — Cross-module correlation insights (connect dots across modules: "DNS leaks + unique fingerprint = identifiable even with VPN")
+11. **export** — Data portability and trending (structured JSON/CSV export, score diffing over time, periodic re-audit)
 
 ### Enhancements to existing modules
 
