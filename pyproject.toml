@@ -7,7 +7,7 @@ name = "dont-track-me"
 version = "0.1.0"
 description = "Modular anti-tracking toolkit — audit and protect your digital privacy"
 requires-python = ">=3.11"
-license = "UNLICENSED"
+license = {text = "All rights reserved"}
 dependencies = [
     "click>=8.0",
     "rich>=13.0",
