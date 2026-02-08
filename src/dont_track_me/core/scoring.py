@@ -24,6 +24,7 @@ MODULE_WEIGHTS: dict[str, int] = {
     "facebook": 10,
     "webrtc": 5,
     "behavior": 5,
+    "app_permissions": 8,
 }
 
 DEFAULT_WEIGHT = 5
