@@ -135,7 +135,7 @@ def _check_weak_signature(cert: dict[str, Any]) -> str | None:
     return None
 
 
-def _check_tls_versions() -> list[Finding]:
+def _check_tls_versions() -> tuple[list[Finding], bool]:
     """Check which TLS versions the system supports."""
     findings: list[Finding] = []
 
