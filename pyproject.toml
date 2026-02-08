@@ -26,6 +26,7 @@ youtube = ["dont-track-me[social-api]"]
 all = ["dont-track-me[dns,metadata,social-api]"]
 dev = [
     "dont-track-me[all]",
+    "ruff>=0.8",
     "pytest>=8.0",
     "pytest-asyncio>=0.24",
     "pytest-cov>=5.0",
