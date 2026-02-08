@@ -6,7 +6,10 @@ from abc import ABC, abstractmethod
 from enum import StrEnum
 from importlib.util import find_spec
 from pathlib import Path
-from typing import Any
+from typing import TYPE_CHECKING, Any
+
+if TYPE_CHECKING:
+    from dont_track_me.core.checklist import PrivacyCheck
 
 from pydantic import BaseModel, Field
 
@@ -71,6 +74,10 @@ class BaseModule(ABC):
         """Return markdown explaining the threat, how it works, and why VPN doesn't help."""
         ...
 
+    def get_checklist(self) -> list[PrivacyCheck] | None:
+        """Return privacy checks for interactive checklist modules, or None."""
+        return None
+
     def get_dependencies(self) -> list[str]:
         """Return list of optional pip package names this module needs."""
         return []
@@ -90,7 +97,6 @@ class BaseModule(ABC):
 
     def _load_info_md(self) -> str:
         """Load the info.md file co-located with the module."""
-        module_dir = Path(__file__).parent  # overridden by subclass file location
         # Subclasses live in modules/<name>/module.py, info.md is next to it
         info_path = Path(self.__class__.__module__.replace(".", "/")).parent / "info.md"
         # Resolve relative to src root

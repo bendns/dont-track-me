@@ -2,11 +2,14 @@
 
 from __future__ import annotations
 
+import itertools
 import mimetypes
 from pathlib import Path
 from typing import Any
 
 from dont_track_me.core.base import AuditResult, Finding, ThreatLevel
+
+MAX_FILES = 10_000
 
 
 def _scan_image_metadata(file_path: Path) -> list[dict[str, Any]]:
@@ -20,7 +23,7 @@ def _scan_image_metadata(file_path: Path) -> list[dict[str, Any]]:
     findings = []
     try:
         img = Image.open(file_path)
-        exif_data = img._getexif()
+        exif_data = img.getexif()
         if exif_data:
             readable = {}
             for tag_id, value in exif_data.items():
@@ -120,7 +123,7 @@ async def audit_metadata(path: str = ".", **kwargs) -> AuditResult:
     if target.is_file():
         files_to_scan = [target]
     elif target.is_dir():
-        files_to_scan = list(target.rglob("*"))
+        files_to_scan = list(itertools.islice(target.rglob("*"), MAX_FILES))
     else:
         return AuditResult(
             module_name="metadata",
@@ -153,9 +156,7 @@ async def audit_metadata(path: str = ".", **kwargs) -> AuditResult:
                 raw_data.append(result)
                 meta = result.get("metadata", {})
                 # Check for GPS data
-                if any(
-                    tag in meta for tag in ("GPSInfo", "GPSLatitude", "GPSLongitude")
-                ):
+                if any(tag in meta for tag in ("GPSInfo", "GPSLatitude", "GPSLongitude")):
                     files_with_metadata += 1
                     findings.append(
                         Finding(

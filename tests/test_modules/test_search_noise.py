@@ -8,7 +8,9 @@ from dont_track_me.modules.search_noise.queries import (
     QUERIES,
     SEARCH_ENGINES,
     get_all_categories,
+    get_available_countries,
     get_balanced_queries,
+    load_queries,
 )
 
 
@@ -100,3 +102,48 @@ async def test_protect_with_category_filter():
     result = await protect_search_noise(dry_run=True, categories="politics", count=10)
     assert result.dry_run is True
     assert "politics" in " ".join(result.actions_available).lower()
+
+
+# --- Country-specific tests ---
+
+
+def test_available_countries():
+    countries = get_available_countries()
+    assert "us" in countries
+    assert "fr" in countries
+
+
+def test_load_queries_us():
+    data = load_queries("us")
+    assert "politics" in data
+    assert "left" in data["politics"]
+
+
+def test_load_queries_fr():
+    data = load_queries("fr")
+    assert "politics" in data
+    assert "gauche" in data["politics"]
+    assert "droite" in data["politics"]
+
+
+def test_load_queries_unknown_country():
+    with pytest.raises(FileNotFoundError, match="No query data"):
+        load_queries("xx")
+
+
+def test_get_all_categories_fr():
+    cats = get_all_categories("fr")
+    assert "politics" in cats
+    assert "religion" in cats
+
+
+def test_get_balanced_queries_fr():
+    queries = get_balanced_queries(count=10, country="fr")
+    assert len(queries) == 10
+
+
+@pytest.mark.asyncio
+async def test_protect_dry_run_fr():
+    result = await protect_search_noise(dry_run=True, count=10, country="fr")
+    assert result.dry_run is True
+    assert len(result.actions_available) > 0

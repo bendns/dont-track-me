@@ -2,10 +2,13 @@
 
 from __future__ import annotations
 
+import itertools
 import mimetypes
 from pathlib import Path
 
 from dont_track_me.core.base import ProtectionResult
+
+MAX_FILES = 10_000
 
 
 def _strip_image_metadata(file_path: Path) -> str | None:
@@ -17,14 +20,13 @@ def _strip_image_metadata(file_path: Path) -> str | None:
 
     try:
         img = Image.open(file_path)
-        if img._getexif() is None:
+        if not img.getexif():
             return None
 
-        # Create a clean copy without EXIF data
-        data = list(img.getdata())
-        clean = Image.new(img.mode, img.size)
-        clean.putdata(data)
-        clean.save(file_path)
+        # Re-save without EXIF by excluding the exif kwarg
+        img_format = img.format
+        img.info.pop("exif", None)
+        img.save(file_path, format=img_format)
         return f"Stripped EXIF data from {file_path.name}"
     except Exception as e:
         return f"Failed to strip {file_path.name}: {e}"
@@ -69,7 +71,7 @@ async def protect_metadata(
     if target.is_file():
         files = [target]
     elif target.is_dir():
-        files = list(target.rglob("*"))
+        files = list(itertools.islice(target.rglob("*"), MAX_FILES))
     else:
         return ProtectionResult(
             module_name="metadata",

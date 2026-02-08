@@ -37,9 +37,7 @@ def _get_system_dns_servers() -> list[str]:
 
     try:
         # macOS: scutil --dns
-        result = subprocess.run(
-            ["scutil", "--dns"], capture_output=True, text=True, timeout=5
-        )
+        result = subprocess.run(["scutil", "--dns"], capture_output=True, text=True, timeout=5)
         if result.returncode == 0:
             for line in result.stdout.splitlines():
                 line = line.strip()
@@ -141,27 +139,15 @@ async def audit_dns(**kwargs) -> AuditResult:
             )
         )
 
-    # Check for DoH/DoT (encrypted DNS)
-    # We can detect if the system is configured for DoH on macOS
-    doh_detected = False
-    try:
-        result = subprocess.run(
-            ["networksetup", "-listallnetworkservices"],
-            capture_output=True,
-            text=True,
-            timeout=5,
-        )
-        # DoH detection is limited from userspace; we note this
-    except (FileNotFoundError, subprocess.TimeoutExpired):
-        pass
-
-    if not doh_detected:
+    # DoH/DoT cannot be reliably detected from userspace — recommend it as best practice
+    if not using_private:
         findings.append(
             Finding(
-                title="No encrypted DNS (DoH/DoT) detected",
+                title="Consider enabling encrypted DNS (DoH/DoT)",
                 description=(
-                    "Your DNS queries are sent in plain text. Anyone on your network "
-                    "(ISP, Wi-Fi operator, attackers) can see every domain you visit."
+                    "Standard DNS queries are sent in plain text. Anyone on your network "
+                    "(ISP, Wi-Fi operator, attackers) can see every domain you visit. "
+                    "Encrypted DNS (DoH/DoT) prevents this eavesdropping."
                 ),
                 threat_level=ThreatLevel.MEDIUM,
                 remediation=(

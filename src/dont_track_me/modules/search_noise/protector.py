@@ -41,6 +41,7 @@ async def protect_search_noise(
     engines: str | None = None,
     min_delay: float = 2.0,
     max_delay: float = 8.0,
+    country: str = "us",
     **kwargs,
 ) -> ProtectionResult:
     """Generate search noise to obfuscate your search profile.
@@ -52,6 +53,7 @@ async def protect_search_noise(
         engines: Comma-separated engine names (default: all).
         min_delay: Minimum delay between queries in seconds.
         max_delay: Maximum delay between queries in seconds.
+        country: ISO 3166-1 alpha-2 country code (default: us).
     """
     actions_available: list[str] = []
     actions_taken: list[str] = []
@@ -60,7 +62,7 @@ async def protect_search_noise(
     if categories:
         cat_list = [c.strip() for c in categories.split(",")]
     else:
-        cat_list = get_all_categories()
+        cat_list = get_all_categories(country)
 
     # Parse engines
     if engines:
@@ -80,7 +82,7 @@ async def protect_search_noise(
         )
 
     # Generate balanced query list
-    queries = get_balanced_queries(categories=cat_list, count=count)
+    queries = get_balanced_queries(categories=cat_list, count=count, country=country)
 
     actions_available.append(
         f"Send {len(queries)} balanced search queries across {len(engine_list)} engines "

@@ -5,8 +5,10 @@ import pytest
 from dont_track_me.modules.social_noise.accounts import (
     ACCOUNTS,
     get_all_platforms,
+    get_available_countries,
     get_balanced_follow_list,
     get_platform_categories,
+    load_accounts,
 )
 from dont_track_me.modules.social_noise.auditor import audit_social_noise
 from dont_track_me.modules.social_noise.protector import protect_social_noise
@@ -146,3 +148,52 @@ async def test_protect_platform_filter():
     parsed = json.loads(result.actions_taken[0])
     assert "youtube" in parsed
     assert "instagram" not in parsed
+
+
+# --- Country-specific tests ---
+
+
+def test_available_countries():
+    countries = get_available_countries()
+    assert "us" in countries
+    assert "fr" in countries
+
+
+def test_load_accounts_us():
+    data = load_accounts("us")
+    assert "instagram" in data
+    assert "youtube" in data
+
+
+def test_load_accounts_fr():
+    data = load_accounts("fr")
+    assert "instagram" in data
+    assert "youtube" in data
+    # French-specific: politique instead of politics
+    assert "politique" in data["instagram"]
+
+
+def test_load_accounts_unknown_country():
+    with pytest.raises(FileNotFoundError, match="No account data"):
+        load_accounts("xx")
+
+
+def test_get_all_platforms_fr():
+    platforms = get_all_platforms("fr")
+    assert "instagram" in platforms
+    assert "youtube" in platforms
+
+
+def test_get_balanced_follow_list_fr():
+    result = get_balanced_follow_list(
+        platforms=["instagram"], per_subcategory=1, country="fr"
+    )
+    assert "instagram" in result
+    assert len(result["instagram"]) > 0
+
+
+@pytest.mark.asyncio
+async def test_protect_dry_run_fr():
+    result = await protect_social_noise(dry_run=True, country="fr")
+    assert result.dry_run is True
+    assert len(result.actions_available) > 0

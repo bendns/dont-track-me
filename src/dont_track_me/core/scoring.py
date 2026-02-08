@@ -17,6 +17,11 @@ MODULE_WEIGHTS: dict[str, int] = {
     "search": 5,
     "search_noise": 10,
     "social_noise": 12,
+    "reddit": 10,
+    "youtube": 12,
+    "instagram": 10,
+    "tiktok": 10,
+    "facebook": 10,
     "webrtc": 5,
     "behavior": 5,
 }

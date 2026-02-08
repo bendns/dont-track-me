@@ -1,5 +1,7 @@
 # dont-track-me
 
+> **Disclaimer:** This entire codebase was generated using Claude (Anthropic). While we've tested it, use it with caution and review the code before relying on it for your privacy.
+
 A modular anti-tracking toolkit that audits how trackable you are online and applies countermeasures. Built for privacy researchers, activists, journalists, and anyone who believes their digital profile shouldn't be weaponized against them.
 
 ## Why this exists
@@ -45,6 +47,57 @@ pip install -e .
 
 The metadata module requires `Pillow` and `pypdf` — install them via `pip install -e ".[metadata]"` or `pip install -e ".[all]"`.
 
+### API modules (Reddit, YouTube)
+
+The Reddit and YouTube modules connect to real APIs to audit your account and apply protections. They require OAuth credentials:
+
+```bash
+# Install with API module dependencies
+pip install -e ".[social-api]"    # Both Reddit + YouTube
+pip install -e ".[reddit]"        # Reddit only
+pip install -e ".[youtube]"       # YouTube only
+```
+
+#### Setting up Reddit API credentials
+
+1. Go to https://www.reddit.com/prefs/apps
+2. Click "create another app..."
+3. Select **"script"** type
+4. Set redirect URI to `http://localhost:8914/callback`
+5. Note the client ID (under the app name) and client secret
+
+#### Setting up YouTube API credentials
+
+1. Go to https://console.cloud.google.com/apis/credentials
+2. Create a new project (or use an existing one)
+3. Enable the **YouTube Data API v3**
+4. Create an **OAuth 2.0 Client ID** (type: Desktop app)
+5. Add `http://localhost:8914/callback` as an authorized redirect URI
+6. Download or note the client ID and client secret
+
+#### Storing credentials
+
+Set credentials via environment variables:
+
+```bash
+export DTM_REDDIT_CLIENT_ID="your-client-id"
+export DTM_REDDIT_CLIENT_SECRET="your-client-secret"
+export DTM_YOUTUBE_CLIENT_ID="your-client-id"
+export DTM_YOUTUBE_CLIENT_SECRET="your-client-secret"
+```
+
+Or add them to `~/.config/dont-track-me/config.toml`:
+
+```toml
+[reddit]
+client_id = "your-client-id"
+client_secret = "your-client-secret"
+
+[youtube]
+client_id = "your-client-id"
+client_secret = "your-client-secret"
+```
+
 ## Quick start
 
 ```bash
@@ -62,6 +115,19 @@ dtm info dns
 ```
 
 ## Usage
+
+### Auth — Connect your accounts
+
+Authenticate with API-backed platforms to unlock real account auditing and protection:
+
+```bash
+dtm auth reddit              # Open browser → OAuth → store token in system keychain
+dtm auth youtube             # Open browser → OAuth → store token in system keychain
+dtm auth status              # Show which platforms are connected + token expiry
+dtm auth revoke reddit       # Delete stored token
+```
+
+Tokens are stored securely in your system's credential store (macOS Keychain, Linux Secret Service, Windows Credential Locker) via `keyring`.
 
 ### Audit — How trackable are you?
 
@@ -83,6 +149,41 @@ dtm protect metadata --apply --path ./   # Strip metadata from files
 
 Protect is **dry-run by default** — it never modifies anything without `--apply`.
 
+#### Reddit — Harden privacy settings + diversify subreddits
+
+Reddit is the only major platform where privacy/tracking settings are writable via API. The Reddit module can disable all 7 tracking preferences in a single command:
+
+```bash
+dtm audit reddit                             # Audit privacy settings + subreddit bias
+dtm protect reddit --apply                   # Harden settings + diversify subreddits
+dtm protect reddit --apply --harden-only     # Only disable tracking preferences
+dtm protect reddit --apply --diversify-only  # Only diversify subscriptions
+```
+
+Settings hardened: `activity_relevant_ads`, `third_party_data_personalized_ads`, `third_party_site_data_personalized_ads`, `third_party_site_data_personalized_content`, `allow_clicktracking`, `public_votes`, `show_presence`.
+
+#### YouTube — Audit and diversify subscriptions
+
+```bash
+dtm audit youtube                  # Analyze subscription bias by category/perspective
+dtm protect youtube --apply        # Subscribe to diverse channels
+```
+
+Rate limited to stay within YouTube's free 10K daily quota (~200 subscribes/day), with randomized delays between calls.
+
+#### Instagram, TikTok, Facebook — Privacy checklists
+
+These platforms' APIs don't allow reading or modifying privacy settings programmatically. Instead, these modules use interactive checklists — answer questions about your current settings and get a personalized score with step-by-step hardening instructions.
+
+```bash
+dtm audit instagram                  # Educational findings (default score)
+dtm audit instagram -i               # Interactive checklist — personalized score
+dtm audit tiktok -i                  # Same for TikTok (12 checks)
+dtm audit facebook -i                # Same for Facebook (14 checks)
+dtm protect instagram                # Step-by-step hardening guide
+dtm info instagram                   # How Instagram tracks you
+```
+
 ### Noise — Poison your profile
 
 This is the offensive strategy. Instead of blocking tracking, you make the collected data useless by injecting noise.
@@ -97,6 +198,7 @@ dtm noise search --apply                                  # Send 50 balanced que
 dtm noise search --apply --count 100                      # Send 100 queries
 dtm noise search --apply --categories politics,religion   # Target specific categories
 dtm noise search --apply --engines google,bing            # Use specific engines
+dtm noise search --apply --country fr                     # French-localized queries
 ```
 
 Query categories: `politics` (left/right/center/libertarian/green), `religion` (christianity/islam/judaism/buddhism/hinduism/atheism), `news_sources`, `interests`, `lifestyle`.
@@ -112,11 +214,34 @@ dtm noise social --apply                                   # All platforms
 dtm noise social --apply --platforms instagram,youtube      # Specific platforms
 dtm noise social --apply --categories politics,music        # Specific categories
 dtm noise social --apply --format json                      # JSON export
+dtm noise social --apply --country fr                      # French accounts
 ```
 
 Platforms: `instagram`, `youtube`, `tiktok`, `facebook`, `twitter`.
 
 This module generates **recommendation lists** — it does not auto-follow accounts (which would require API tokens and risk account bans). You follow the suggested accounts manually.
+
+#### Country localization
+
+Noise data is stored in per-country YAML files so queries and accounts match your local context. A French user gets queries about Macron and Le Monde, not American politics.
+
+```bash
+dtm noise search --country fr                              # Use French queries
+dtm noise social --country fr                              # Use French accounts
+```
+
+Available countries: `us` (default), `fr`.
+
+The default country is resolved in order:
+1. `--country` / `-C` CLI flag
+2. `DTM_COUNTRY` environment variable
+3. `country` key in `~/.config/dont-track-me/config.toml`
+4. Falls back to `us`
+
+```toml
+# ~/.config/dont-track-me/config.toml
+country = "fr"
+```
 
 ### Info — Learn about threats
 
@@ -126,6 +251,11 @@ dtm info metadata        # How file metadata leaks your identity
 dtm info headers         # How HTTP headers fingerprint you
 dtm info search_noise    # How search engines profile your beliefs
 dtm info social_noise    # How social media follows define you
+dtm info reddit          # How Reddit tracks your preferences
+dtm info youtube         # How YouTube profiles your subscriptions
+dtm info instagram       # How Instagram tracks you
+dtm info tiktok          # How TikTok profiles your behavior
+dtm info facebook        # How Facebook builds your shadow profile
 ```
 
 ### Score — Your privacy at a glance
@@ -145,6 +275,21 @@ Returns a weighted score from 0 (fully exposed) to 100 (fully protected) with a 
 | **dns** | Detects DNS leaks, tracking DNS providers (Google, OpenDNS), and lack of encrypted DNS | [DNS Tracking — Your Browsing History in Plain Text](src/dont_track_me/modules/dns/info.md) |
 | **metadata** | Scans images for GPS/EXIF data and PDFs for author metadata; strips them on protect | [Metadata Leakage — Hidden Data in Your Files](src/dont_track_me/modules/metadata/info.md) |
 | **headers** | Analyzes HTTP headers (User-Agent, Accept-Language, Referer) for identity leaks | [HTTP Header Tracking — Your Browser's Business Card](src/dont_track_me/modules/headers/info.md) |
+
+### API modules (authenticated)
+
+| Module | What it does | Deep dive |
+|---|---|---|
+| **reddit** | Audits 7 privacy/tracking settings + subreddit bias; hardens settings and diversifies subscriptions via API | [Reddit Tracking — Your Preferences Betray You](src/dont_track_me/modules/reddit/info.md) |
+| **youtube** | Audits subscription bias by category/perspective; subscribes to diverse channels via API | [YouTube Profiling — Your Subscriptions Define You](src/dont_track_me/modules/youtube/info.md) |
+
+### Checklist modules (interactive)
+
+| Module | What it does | Deep dive |
+|---|---|---|
+| **instagram** | Interactive privacy checklist (12 checks) covering account visibility, ad tracking, and Off-Instagram Activity | [Instagram Tracking — Your Photos Tell More Than You Think](src/dont_track_me/modules/instagram/info.md) |
+| **tiktok** | Interactive privacy checklist (12 checks) covering algorithm profiling, device fingerprinting, and ad data sharing | [TikTok Tracking — The Algorithm Knows You Better Than You Know Yourself](src/dont_track_me/modules/tiktok/info.md) |
+| **facebook** | Interactive privacy checklist (14 checks) covering Off-Facebook Activity, face recognition, and shadow profiles | [Facebook Tracking — The Most Complete Surveillance Machine Ever Built](src/dont_track_me/modules/facebook/info.md) |
 
 ### Offensive modules (noise generation)
 
@@ -169,7 +314,9 @@ Modules are auto-discovered at startup. Adding a new tracking vector is as simpl
 src/dont_track_me/
 ├── cli/main.py           # CLI entry point (dtm command)
 ├── core/
+│   ├── auth.py           # OAuthModule, TokenStore, OAuthFlow
 │   ├── base.py           # BaseModule ABC, AuditResult, Finding, ThreatLevel
+│   ├── checklist.py      # PrivacyCheck model & interactive checklist scoring
 │   ├── registry.py       # Auto-discovery of modules
 │   ├── scoring.py        # Weighted score aggregation
 │   └── config.py         # TOML configuration loading
@@ -178,7 +325,14 @@ src/dont_track_me/
     ├── metadata/         # File metadata scanning & stripping
     ├── headers/          # HTTP header analysis & recommendations
     ├── search_noise/     # Search query noise generation
-    └── social_noise/     # Social media follow list diversification
+    │   └── data/         #   Per-country query YAML files (us.yaml, fr.yaml)
+    ├── social_noise/     # Social media follow list diversification
+    │   └── data/         #   Per-country account YAML files (us.yaml, fr.yaml)
+    ├── reddit/           # Reddit privacy audit & protection (API)
+    ├── youtube/          # YouTube subscription audit & diversification (API)
+    ├── instagram/        # Instagram privacy checklist (interactive)
+    ├── tiktok/           # TikTok privacy checklist (interactive)
+    └── facebook/         # Facebook privacy checklist (interactive)
 ```
 
 ## Running tests

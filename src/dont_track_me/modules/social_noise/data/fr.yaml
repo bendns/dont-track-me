@@ -1,0 +1,419 @@
+instagram:
+  musique:
+    variete:
+    - '@stromae'
+    - '@angele_vl'
+    - '@ayanakamuramusic'
+    - '@louane'
+    - '@claraluciani'
+    rap:
+    - '@booba'
+    - '@pnlqlf'
+    - '@orelsan'
+    - '@jul'
+    - '@nekfeu'
+    rock:
+    - '@phoenixofficial'
+    - '@noir_desir_officiel'
+    - '@indochineofficial'
+    - '@manonegra_off'
+    - '@louiseattaque_off'
+    classique:
+    - '@renaudcapucon'
+    - '@alexandretharaud'
+    - '@gautiercapucon'
+    - '@sabinedevieilhe'
+    - '@nataliedessay'
+    electronique:
+    - '@davidguetta'
+    - '@kungs_music'
+    - '@madeon'
+    - '@gesaffelstein'
+    - '@kavinsky'
+    chanson:
+    - '@patrickbruel'
+    - '@francoismorel_off'
+    - '@vincentdelerm'
+    - '@aznavour_officiel'
+    - '@jacquesbrel_officiel'
+  politique:
+    gauche:
+    - '@jlmelenchon'
+    - '@franceinsoumise'
+    - '@raphaelglucksmann'
+    - '@fabien_roussel'
+    - '@sandrinerousseau'
+    droite:
+    - '@marine_lepen'
+    - '@jordanbardella'
+    - '@ericzemmour'
+    - '@lesrepublicains'
+    - '@rassemblementnational'
+    centre:
+    - '@emmanuelmacron'
+    - '@francoisbayrou'
+    - '@edouardphilippe_off'
+    - '@gabrielattal'
+    - '@renaissance_off'
+    ecologiste:
+    - '@marinetondelier'
+    - '@yannickjadot'
+    - '@sandrinerousseau_off'
+    - '@europeecologie'
+    - '@greenpeacefr'
+  info:
+    medias_francais:
+    - '@lemondefr'
+    - '@lefigaro'
+    - '@liberation'
+    - '@mediapart'
+    - '@lepoint'
+    international:
+    - '@france24'
+    - '@rfiofficiel'
+    - '@tv5mondefr'
+    - '@courrierinternational'
+    - '@artefr'
+    tele:
+    - '@bfmtv'
+    - '@franceinfo'
+    - '@lci'
+    - '@cnews'
+    independant:
+    - '@brut.media'
+    - '@hugodecrypte'
+    - '@lecanardenchaine'
+    - '@charliehebdo_officiel'
+  sport:
+    football:
+    - '@equipedefrance'
+    - '@psg'
+    - '@om_officiel'
+    - '@ol'
+    - '@asmonacofc'
+    tennis:
+    - '@richardgasquet1'
+    - '@carolinegarcia'
+    - '@gastonuga'
+    - '@jowilfriedtsonga'
+    - '@adrianmannarino'
+    rugby:
+    - '@francerugby'
+    - '@stadetoulousain'
+    - '@sfparisrugby'
+    - '@antoinedupontrugby'
+    - '@top14rugby'
+    cyclisme:
+    - '@julianalaphilippe'
+    - '@thibautpinot'
+    - '@romainbardet'
+    - '@letourdefrance'
+    - '@remicavagna'
+  culture:
+    cinema:
+    - '@jacquesaudiard'
+    - '@omarsy'
+    - '@justine_triet'
+    - '@celine_sciamma'
+    - '@festivaldecannes'
+    litterature:
+    - '@amelienothomb'
+    - '@leilaslimani'
+    - '@virginiedespentes'
+    - '@michelhouellebecq'
+    art:
+    - '@jr'
+    - '@museedulouvre'
+    - '@centrepompidou'
+    - '@museedorsay'
+    - '@palaisdetokyo'
+    mode:
+    - '@chanelofficial'
+    - '@dior'
+    - '@yvessaintlaurent'
+    - '@louisvuitton'
+    - '@jeanpaulgaultierofficial'
+    humour:
+    - '@jameldebbouze'
+    - '@kevadams_off'
+    - '@gadelmaleh'
+    - '@paulmirabel'
+    - '@florenceforesti'
+youtube:
+  politique:
+    gauche:
+    - Blast
+    - Mediapart
+    - Le Média
+    - Osons Causer
+    - Usul
+    droite:
+    - CNews
+    - Pascal Praud et vous
+    - TVLibertes
+    - Livre Noir
+    - Valeurs Actuelles
+    centre:
+    - Hugo Décrypte
+    - Le Dessous des Cartes
+    - Brut
+    - France Info
+    international:
+    - France 24
+    - RFI
+    - ARTE
+    - TV5Monde
+  education:
+    science:
+    - Dr Nozman
+    - ScienceEtonnante
+    - Dirty Biology
+    - e-penser
+    - Astronogeek
+    histoire:
+    - Nota Bene
+    - C'est une autre histoire
+    - Sur le champ
+    - Confucius
+    - Herodot'com
+    philosophie:
+    - Monsieur Phi
+    - Cyrus North
+    - Le Précepteur
+    - Politikon
+    technologie:
+    - Underscore_
+    - Micode
+    - Léo Duff
+    - Cookie Connecté
+    - Nowtech
+  divertissement:
+    gaming:
+    - Squeezie
+    - Cyprien Gaming
+    - Gotaga
+    - Joueur Du Grenier
+    - ZeratoR
+    musique:
+    - COLORS
+    - Sofar Sounds Paris
+    - Les Concerts de l'Olympia
+    - La Blogothèque
+    humour:
+    - Cyprien
+    - Norman fait des vidéos
+    - McFly et Carlito
+    - Natoo
+    - Le Palmashow
+    cuisine:
+    - Hervé Cuisine
+    - Chef Michel Dumas
+    - FastGoodCuisine
+    - Cuisine Actuelle
+    - Jujube en Cuisine
+  sport:
+    football:
+    - L'Équipe
+    - Wiloo
+    - beIN SPORTS France
+    - Ligue 1 Uber Eats
+    fitness:
+    - Tibo InShape
+    - Sissy Mua
+    - Alex Levand
+    - Bodytime
+    combat:
+    - La Sueur
+    - RMC Sport
+    - Karate Bushido Officiel
+    - Greg MMA
+    rugby:
+    - France Rugby
+    - Midi Olympique
+    - Canal+ Rugby
+    - Rugbyrama
+tiktok:
+  politique:
+    gauche:
+    - '@jlmelenchon'
+    - '@franceinsoumise'
+    - '@raphaelglucksmann'
+    - '@blast_info'
+    droite:
+    - '@jordanbardella'
+    - '@marine_lepen'
+    - '@ericzemmour'
+    centre:
+    - '@hugodecrypte'
+    - '@gabrielattal'
+    - '@emmanuelmacron'
+  divertissement:
+    humour:
+    - '@squeezie'
+    - '@mcflyetcarlito'
+    - '@inoxtag'
+    - '@kevinrazy'
+    danse:
+    - '@leonie_jackson'
+    - '@paolarochet'
+    - '@warejah'
+    musique:
+    - '@ayanakamura'
+    - '@stromae'
+    - '@angele_vl'
+  education:
+    science:
+    - '@drnozman'
+    - '@scienceetonnante'
+    - '@dirtybiology'
+    histoire:
+    - '@notabene'
+    - '@cyrusnorth'
+    finance:
+    - '@finary_app'
+    - '@lucasbivert'
+    - '@lucaspavier'
+  mode_de_vie:
+    cuisine:
+    - '@hervecuisine'
+    - '@fastgoodcuisine'
+    - '@norbert_tarayre'
+    fitness:
+    - '@tiboinshape'
+    - '@sissymua'
+    - '@alexlevand'
+    voyage:
+    - '@brunomalverne'
+    - '@ichbon'
+    - '@voyageurs_du_monde'
+facebook:
+  info:
+    gauche:
+    - Le Monde
+    - Mediapart
+    - Libération
+    - L'Humanité
+    - Politis
+    droite:
+    - Le Figaro
+    - CNews
+    - Valeurs Actuelles
+    - Le Point
+    - Le Journal du Dimanche
+    centre:
+    - France Info
+    - France Inter
+    - Les Echos
+    - La Croix
+    - 20 Minutes
+    international:
+    - France 24
+    - RFI
+    - ARTE
+    - TV5Monde
+    - Courrier International
+  interets:
+    sports:
+    - L'Équipe
+    - RMC Sport
+    - Eurosport France
+    - beIN SPORTS
+    - France Football
+    science:
+    - Sciences et Avenir
+    - CNRS
+    - La Recherche
+    - Futura Sciences
+    arts:
+    - Musée du Louvre
+    - Centre Pompidou
+    - Musée d'Orsay
+    - Beaux Arts Magazine
+    gaming:
+    - Jeuxvideo.com
+    - Gamekult
+    - Millenium
+    - JV Le Magazine
+  communautes:
+    parents:
+    - Magicmaman
+    - Parents
+    - Famille Epanouie
+    - La Maison des Maternelles
+    plein_air:
+    - Fédération Française de Randonnée
+    - GR Sentiers
+    - Montagne Magazine
+    - Decathlon France
+    cuisine:
+    - Marmiton
+    - 750g
+    - Cuisine Actuelle
+    - Le Journal des Femmes Cuisine
+    tech:
+    - Frandroid
+    - Les Numériques
+    - 01net
+    - Clubic
+twitter:
+  politique:
+    gauche:
+    - '@JLMelenchon'
+    - '@Raph_Glucksmann'
+    - '@Fabien_Roussel'
+    - '@S_Rousseau'
+    - '@C_Autain'
+    droite:
+    - '@MLP_officiel'
+    - '@J_Bardella'
+    - '@E_Zemmour'
+    - '@E_Ciotti'
+    centre:
+    - '@EmmanuelMacron'
+    - '@F_Bayrou'
+    - '@GabrielAttal'
+    - '@E_Philippe'
+    journalistes:
+    - '@E_Plenel'
+    - '@N_Demorand'
+    - '@LeaSalame'
+    - '@JJ_Bourdin'
+  info:
+    agences:
+    - '@AFP'
+    - '@Reuters'
+    - '@AP'
+    medias_francais:
+    - '@lemondefr'
+    - '@Le_Figaro'
+    - '@liberation'
+    - '@Mediapart'
+    - '@LePoint'
+    medias_monde:
+    - '@BBCWorld'
+    - '@AJEnglish'
+    - '@France24_fr'
+    - '@DWNews'
+    tech:
+    - '@Frandroid'
+    - '@LesNumeriques'
+    - '@01net'
+    - '@Clubic'
+  culture:
+    auteurs:
+    - '@A_Nothomb'
+    - '@L_Slimani'
+    - '@V_Despentes'
+    scientifiques:
+    - '@E_Klein'
+    - '@C_Villani'
+    - '@A_Bidar'
+    humoristes:
+    - '@GadElmaleh'
+    - '@F_Foresti'
+    - '@Jamel_ComedyClub'
+    sportifs:
+    - '@K_Mbappe'
+    - '@T_Riner'
+    - '@A_Dupont'
+    - '@T_Pinot'

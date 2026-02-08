@@ -1,0 +1,263 @@
+politics:
+  gauche:
+  - programme France Insoumise présidentielle
+  - Mélenchon discours assemblée nationale
+  - Nouveau Front Populaire alliance gauche
+  - parti socialiste congrès programme
+  - hausse salaire minimum SMIC revalorisation
+  - défense services publics hôpital école
+  - réforme retraites opposition syndicats
+  - nationalisation entreprises stratégiques énergie
+  - justice sociale redistribution richesses
+  - logement social construction HLM
+  - droit du travail protection salariés
+  - sécurité sociale financement pérennité
+  - transition écologique emplois verts
+  - lutte contre précarité plan pauvreté
+  - gratuité transports en commun expérimentation
+  droite:
+  - programme Les Républicains élections
+  - Rassemblement National résultats sondages
+  - Marine Le Pen discours politique nationale
+  - souveraineté nationale indépendance France
+  - sécurité intérieure délinquance politique
+  - valeurs traditionnelles famille politique conservatrice
+  - baisse impôts entreprises compétitivité
+  - immigration clandestine contrôle frontières
+  - identité nationale culture française
+  - autorité de l'État réforme justice
+  - défense nationale budget armée française
+  - politique pénale fermeté récidive
+  - Jordan Bardella programme législatives
+  - libéralisme économique réforme marché travail
+  - ordre public manifestations maintien
+  centre:
+  - Renaissance programme parti Macron
+  - Emmanuel Macron réforme politique économique
+  - centrisme pragmatique politique française
+  - réforme marché du travail flexibilité
+  - construction européenne avenir UE France
+  - politique en même temps ni gauche ni droite
+  - réforme fonction publique modernisation État
+  - François Bayrou MoDem programme centriste
+  - start-up nation politique innovation
+  - dialogue social partenaires sociaux réforme
+  - attractivité économique France investissement
+  - Édouard Philippe Horizons programme politique
+  ecologiste:
+  - EELV programme écologie politique
+  - transition écologique plan climat France
+  - Yannick Jadot Europe Écologie programme
+  - biodiversité protection espèces menacées France
+  - énergie renouvelable éolien solaire France
+  - sortie du nucléaire débat transition
+  - agriculture biologique conversion aides
+  - zéro artificialisation nette des sols
+  - Marine Tondelier secrétaire EELV programme
+  - mobilité douce vélo transports décarbonés
+  - rénovation thermique bâtiments passoire énergétique
+  - pollution plastique interdiction usage unique
+  souverainiste:
+  - Reconquête programme Éric Zemmour
+  - Nicolas Dupont-Aignan Debout la France
+  - identité nationale civilisation française
+  - indépendance France Union Européenne
+  - souveraineté alimentaire production locale
+  - souveraineté monétaire euro critique
+  - Florian Philippot les Patriotes frexit
+  - remigration débat politique française
+  - souveraineté numérique indépendance technologique
+  - politique étrangère non-alignement France
+  - relocalisation industrielle made in France
+  - critique mondialisation souveraineté économique
+
+religion:
+  christianisme:
+  - théologie catholique enseignement Vatican
+  - protestantisme en France temple réformé
+  - églises romanes patrimoine religieux France
+  - pèlerinage Saint-Jacques de Compostelle préparation
+  - messe catholique horaires paroisse
+  - catéchisme inscription enfants paroisse
+  - Lourdes pèlerinage sanctuaire miracles
+  - histoire chrétienté France roi baptême Clovis
+  - conférence des évêques de France actualité
+  - Noël traditions chrétiennes célébration messe
+  islam:
+  - islam en France organisation mosquées
+  - grande mosquée de Paris visite horaires
+  - Ramadan dates horaires prière iftar
+  - culture musulmane française histoire intégration
+  - halal certification alimentation France
+  - fête de l'Aïd traditions célébrations
+  - calligraphie arabe art islamique exposition
+  - islam et laïcité débat France
+  - apprendre arabe cours mosquée
+  - histoire islam en France héritage culturel
+  judaisme:
+  - judaïsme français communauté histoire
+  - synagogue Paris horaires offices Shabbat
+  - traditions juives fêtes Hanoukka Pessah
+  - casher alimentation boucherie Paris
+  - mémorial Shoah Paris visite commémoration
+  - hébreu cours apprentissage France
+  - culture yiddish patrimoine européen
+  - Rachi Troyes héritage intellectuel juif
+  - bar mitzvah préparation communauté
+  - musée art et histoire du judaïsme Paris
+  bouddhisme:
+  - bouddhisme en France centres méditation
+  - méditation zazen dojo zen Paris
+  - philosophie bouddhiste pleine conscience
+  - retraite méditation Vipassana France
+  - village des pruniers Thich Nhat Hanh
+  - temple bouddhiste pagode Vincennes
+  - enseignement Dalaï Lama philosophie tibétaine
+  - bouddhisme et psychologie thérapie moderne
+  - karma samsara explication bouddhiste
+  - institut d'études bouddhiques Paris cours
+  hindouisme:
+  - hindouisme communauté France temple
+  - yoga origines spiritualité philosophie indienne
+  - philosophie vedanta Upanishads enseignement
+  - temple hindou Ganesh Paris célébration
+  - Bhagavad Gita lecture traduction française
+  - fête Diwali célébration France
+  - ayurveda médecine traditionnelle indienne
+  - mantra méditation hindoue pratique
+  - danse classique indienne Bharatanatyam cours Paris
+  - cuisine végétarienne indienne recettes sattvique
+  laicite:
+  - laïcité principes loi 1905 séparation
+  - sécularisme philosophie politique France
+  - philosophie des Lumières Voltaire Rousseau
+  - humanisme laïque éthique sans religion
+  - libre pensée association rationalisme
+  - histoire laïcité école républicaine France
+  - charte de la laïcité à l'école
+  - débat laïcité signes religieux espace public
+  - morale laïque enseignement civique école
+  - observatoire de la laïcité rapports analyses
+
+sources_info:
+  gauche:
+  - Le Monde enquête actualité politique
+  - Libération reportage société culture
+  - Mediapart investigation révélation
+  - L'Humanité actualité syndicale sociale
+  - Alternatives Économiques dossier économie
+  - Politis magazine gauche écologie
+  - Regards magazine gauche analyse
+  - Basta média indépendant social
+  droite:
+  - Le Figaro éditorial politique économie
+  - Valeurs Actuelles dossier société
+  - CNews débat politique émission
+  - Le Point analyse politique géopolitique
+  - L'Opinion économie libérale éditorial
+  - Causeur magazine débat idées conservateur
+  - Boulevard Voltaire chronique actualité
+  - Le JDD journal du dimanche politique
+  internationale:
+  - France 24 actualité internationale en direct
+  - RFI radio monde information francophone
+  - Courrier International presse étrangère traduction
+  - AFP dépêche agence presse mondiale
+  - TV5 Monde actualité francophonie
+  - Arte info reportage Europe
+  - Le Monde diplomatique analyse géopolitique
+  - L'Express international politique étrangère
+  independante:
+  - Reporterre quotidien écologie environnement
+  - Blast média indépendant enquête vidéo
+  - Arrêt sur images critique médias analyse
+  - Rue89 actualité Lyon Strasbourg locale
+  - Les Jours série journalistique investigation
+  - StreetPress enquête extrême droite société
+  - Disclose investigation journalisme données
+  - Le Média info indépendant participatif
+
+interets:
+  sports:
+  - Ligue 1 résultats classement journée
+  - Roland-Garros tableau tirage résultats
+  - Tour de France étape classement général
+  - rugby Top 14 résultats classement
+  - handball équipe de France championnat
+  - Jeux Olympiques Paris médailles France
+  - natation championnats de France résultats
+  - cyclisme Paris-Roubaix parcours favoris
+  arts:
+  - musée du Louvre exposition temporaire visite
+  - cinéma français César meilleur film palmarès
+  - littérature française prix Goncourt sélection
+  - théâtre Comédie Française programmation saison
+  - Festival de Cannes sélection officielle palme
+  - bande dessinée festival Angoulême nouveautés
+  - musique classique Philharmonie Paris concert
+  - art contemporain Palais de Tokyo exposition
+  technologie:
+  - French Tech startups levée de fonds
+  - intelligence artificielle recherche France Inria
+  - startup France licorne valorisation
+  - cybersécurité ANSSI menaces recommandations
+  - Station F incubateur Paris programme
+  - numérique souverain cloud France
+  - 5G déploiement couverture opérateurs France
+  - OVHcloud hébergement serveur européen
+  cuisine:
+  - recette boeuf bourguignon traditionnel
+  - pâtisserie française tarte tatin recette
+  - gastronomie régionale spécialités terroir
+  - baguette tradition fabrication maison
+  - fromage français plateau dégustation
+  - vin bordeaux bourgogne accord mets
+  - crêpes bretonnes recette galette sarrasin
+  - marché producteurs locaux saison
+  plein_air:
+  - randonnée GR20 Corse préparation itinéraire
+  - ski alpes stations météo enneigement
+  - voile bretagne croisière côtière navigation
+  - jardinage potager permaculture conseils
+  - escalade fontainebleau bloc parcours
+  - vélo route cols Pyrénées itinéraire
+  - camping sauvage bivouac réglementation France
+  - pêche rivière truite ouverture saison
+
+mode_de_vie:
+  urbain:
+  - vie parisienne quartier arrondissement guide
+  - vélo ville piste cyclable Vélib itinéraire
+  - coworking espace travail partagé Paris
+  - sorties culturelles exposition concert agenda
+  - marché couvert halles quartier Paris
+  - transports en commun métro pass Navigo
+  - terrasse café restaurant quartier branché
+  - vie nocturne bar concert sortie Paris
+  rural:
+  - vie à la campagne installation démarches
+  - agriculture bio conversion exploitation
+  - village français patrimoine restauration
+  - artisanat local métiers d'art savoir-faire
+  - marché fermier circuit court producteur
+  - maison de campagne rénovation ancienne
+  - nature biodiversité observation oiseaux
+  - fête de village brocante vide-grenier
+  famille:
+  - activités enfants vacances scolaires sorties
+  - vacances famille camping mer montagne France
+  - éducation nationale inscription école maternelle
+  - crèche inscription place disponible commune
+  - allocation familiale CAF aide parent
+  - loisirs créatifs bricolage enfants maison
+  - parc d'attractions famille Astérix Futuroscope
+  - garde enfant assistante maternelle périscolaire
+  bien_etre:
+  - yoga pratique cours débutant en ligne
+  - santé mentale psychologue consultation remboursement
+  - nutrition équilibrée repas sain semaine
+  - course à pied programme débutant 10km
+  - sommeil qualité insomnie conseils améliorer
+  - gestion stress relaxation cohérence cardiaque
+  - naturopathie remèdes naturels plantes
+  - marche nordique bienfaits santé parcours

@@ -5,14 +5,25 @@ from __future__ import annotations
 import asyncio
 import json
 import sys
+import time
 from typing import Any
 
 import click
 from rich.console import Console
+from rich.markdown import Markdown
 from rich.panel import Panel
 from rich.table import Table
 
+from dont_track_me.core.auth import (
+    REDIRECT_URI,
+    AuthenticationRequired,
+    OAuthFlow,
+    OAuthModule,
+    TokenStore,
+    get_platform_credentials,
+)
 from dont_track_me.core.base import AuditResult, ThreatLevel
+from dont_track_me.core.config import get_default_country
 from dont_track_me.core.registry import (
     get_all_modules,
     get_available_modules,
@@ -23,6 +34,24 @@ from dont_track_me.core.scoring import (
     get_score_color,
     get_score_label,
 )
+from dont_track_me.modules.search_noise.protector import protect_search_noise
+from dont_track_me.modules.social_noise.protector import protect_social_noise
+
+# Platform OAuth configurations
+OAUTH_CONFIGS: dict[str, dict[str, Any]] = {
+    "reddit": {
+        "authorize_url": "https://www.reddit.com/api/v1/authorize",
+        "token_url": "https://www.reddit.com/api/v1/access_token",
+        "scopes": ["identity", "mysubreddits", "read", "account", "edit"],
+        "extra_params": {"response_type": "code", "duration": "permanent"},
+    },
+    "youtube": {
+        "authorize_url": "https://accounts.google.com/o/oauth2/v2/auth",
+        "token_url": "https://oauth2.googleapis.com/token",
+        "scopes": ["https://www.googleapis.com/auth/youtube"],
+        "extra_params": {"access_type": "offline", "prompt": "consent"},
+    },
+}
 
 console = Console()
 
@@ -40,14 +69,55 @@ def _run_async(coro: Any) -> Any:
     return asyncio.run(coro)
 
 
+def _run_interactive_checklist(checks: list[Any], module_name: str) -> dict[str, bool]:
+    """Prompt user through a privacy checklist and collect yes/no responses."""
+    threat_styles = {
+        ThreatLevel.CRITICAL: "red bold",
+        ThreatLevel.HIGH: "red",
+        ThreatLevel.MEDIUM: "yellow",
+        ThreatLevel.LOW: "blue",
+    }
+
+    console.print(
+        Panel(
+            f"[bold]Privacy Checklist — {module_name}[/bold]\n"
+            "Answer each question about your current settings.",
+            style="blue",
+        )
+    )
+
+    responses: dict[str, bool] = {}
+    for i, check in enumerate(checks, 1):
+        style = threat_styles.get(check.threat_level, "dim")
+        console.print(
+            f"\n[{style}][{check.threat_level.value.upper()}][/{style}] "
+            f"({i}/{len(checks)}) {check.question}"
+        )
+        console.print(f"  [dim]{check.description}[/dim]")
+        console.print(f"  [dim]Fix: {check.remediation}[/dim]")
+
+        while True:
+            answer = click.prompt("  (y/n)", type=str, default="").strip().lower()
+            if answer in ("y", "yes"):
+                responses[check.id] = True
+                break
+            elif answer in ("n", "no"):
+                responses[check.id] = False
+                break
+            else:
+                console.print("  [yellow]Please answer y or n[/yellow]")
+
+    console.print()
+    return responses
+
+
 def _render_audit_result(result: AuditResult) -> None:
     """Render a single module's audit result with Rich."""
     color = get_score_color(result.score)
     label = get_score_label(result.score)
 
     console.print(
-        f"\n[bold]{result.module_name}[/bold] — "
-        f"[{color}]{result.score}/100 ({label})[/{color}]"
+        f"\n[bold]{result.module_name}[/bold] — [{color}]{result.score}/100 ({label})[/{color}]"
     )
 
     if not result.findings:
@@ -72,10 +142,19 @@ def cli() -> None:
 @cli.command()
 @click.argument("module_name", required=False)
 @click.option("--modules", "-m", help="Comma-separated list of modules to audit.")
+@click.option("--format", "output_format", type=click.Choice(["rich", "json"]), default="rich")
 @click.option(
-    "--format", "output_format", type=click.Choice(["rich", "json"]), default="rich"
+    "--interactive",
+    "-i",
+    is_flag=True,
+    help="Answer privacy checklists interactively (for checklist-based modules).",
 )
-def audit(module_name: str | None, modules: str | None, output_format: str) -> None:
+def audit(
+    module_name: str | None,
+    modules: str | None,
+    output_format: str,
+    interactive: bool,
+) -> None:
     """Run privacy audits. Optionally specify a single module or --modules list."""
     available = get_available_modules()
 
@@ -88,11 +167,9 @@ def audit(module_name: str | None, modules: str | None, output_format: str) -> N
         mod = get_module(module_name)
         if mod is None:
             console.print(f"[red]Unknown module: {module_name}[/red]")
-            sys.exit(1)
+            raise SystemExit(1)
         if not mod.is_available():
-            console.print(
-                f"[red]Module '{module_name}' dependencies not installed.[/red]"
-            )
+            console.print(f"[red]Module '{module_name}' dependencies not installed.[/red]")
             sys.exit(1)
         targets = {module_name: mod}
     elif modules:
@@ -104,17 +181,36 @@ def audit(module_name: str | None, modules: str | None, output_format: str) -> N
                 console.print(f"[yellow]Skipping unknown module: {name}[/yellow]")
                 continue
             if not mod.is_available():
-                console.print(
-                    f"[yellow]Skipping {name} (dependencies not installed)[/yellow]"
-                )
+                console.print(f"[yellow]Skipping {name} (dependencies not installed)[/yellow]")
                 continue
             targets[name] = mod
     else:
         targets = available
 
     async def _run_audits() -> list[AuditResult]:
-        tasks = [mod.audit() for mod in targets.values()]
-        return await asyncio.gather(*tasks)
+        results = []
+        for name, mod in targets.items():
+            kwargs: dict[str, Any] = {}
+
+            # Interactive checklist for modules that support it
+            checklist = mod.get_checklist() if interactive else None
+            if checklist is not None:
+                responses = _run_interactive_checklist(checklist, name)
+                kwargs["responses"] = responses
+
+            try:
+                result = await mod.audit(**kwargs)
+                results.append(result)
+            except AuthenticationRequired as e:
+                if module_name:
+                    # User explicitly requested this module — show error
+                    console.print(f"[red]Not authenticated. Run: dtm auth {e.platform}[/red]")
+                    sys.exit(1)
+                else:
+                    console.print(
+                        f"[dim]Skipping {name} (not authenticated — run dtm auth {e.platform})[/dim]"
+                    )
+        return results
 
     results = _run_async(_run_audits())
 
@@ -128,9 +224,7 @@ def audit(module_name: str | None, modules: str | None, output_format: str) -> N
         overall = compute_overall_score(results)
         color = get_score_color(overall)
         label = get_score_label(overall)
-        console.print(
-            f"\n[bold]Overall Score:[/bold] [{color}]{overall}/100 ({label})[/{color}]\n"
-        )
+        console.print(f"\n[bold]Overall Score:[/bold] [{color}]{overall}/100 ({label})[/{color}]\n")
 
 
 @cli.command()
@@ -146,7 +240,19 @@ def audit(module_name: str | None, modules: str | None, output_format: str) -> N
     type=click.Path(exists=True),
     help="Path for file-based modules (e.g. metadata).",
 )
-def protect(module_name: str | None, apply_: bool, path: str | None) -> None:
+@click.option("--harden-only", is_flag=True, help="Only harden privacy settings (reddit).")
+@click.option(
+    "--diversify-only",
+    is_flag=True,
+    help="Only diversify subscriptions (reddit/youtube).",
+)
+def protect(
+    module_name: str | None,
+    apply_: bool,
+    path: str | None,
+    harden_only: bool,
+    diversify_only: bool,
+) -> None:
     """Apply privacy protections. Dry-run by default — use --apply to execute."""
     available = get_available_modules()
     dry_run = not apply_
@@ -155,7 +261,7 @@ def protect(module_name: str | None, apply_: bool, path: str | None) -> None:
         mod = get_module(module_name)
         if mod is None or not mod.is_available():
             console.print(f"[red]Module '{module_name}' not available.[/red]")
-            sys.exit(1)
+            raise SystemExit(1)
         targets = {module_name: mod}
     else:
         targets = available
@@ -166,11 +272,27 @@ def protect(module_name: str | None, apply_: bool, path: str | None) -> None:
         )
 
     async def _run_protections() -> list:
-        kwargs: dict[str, Any] = {}
-        if path:
-            kwargs["path"] = path
-        tasks = [mod.protect(dry_run=dry_run, **kwargs) for mod in targets.values()]
-        return await asyncio.gather(*tasks)
+        results = []
+        for name, mod in targets.items():
+            kwargs: dict[str, Any] = {}
+            if path:
+                kwargs["path"] = path
+            if harden_only:
+                kwargs["harden_only"] = True
+            if diversify_only:
+                kwargs["diversify_only"] = True
+            try:
+                result = await mod.protect(dry_run=dry_run, **kwargs)
+                results.append(result)
+            except AuthenticationRequired as e:
+                if module_name:
+                    console.print(f"[red]Not authenticated. Run: dtm auth {e.platform}[/red]")
+                    sys.exit(1)
+                else:
+                    console.print(
+                        f"[dim]Skipping {name} (not authenticated — run dtm auth {e.platform})[/dim]"
+                    )
+        return results
 
     results = _run_async(_run_protections())
 
@@ -199,9 +321,7 @@ def info(module_name: str) -> None:
     mod = get_module(module_name)
     if mod is None:
         console.print(f"[red]Unknown module: {module_name}[/red]")
-        sys.exit(1)
-
-    from rich.markdown import Markdown
+        raise SystemExit(1)
 
     content = mod.get_educational_content()
     console.print(Panel(f"[bold]{mod.display_name}[/bold]", style="blue"))
@@ -218,8 +338,14 @@ def score() -> None:
         sys.exit(1)
 
     async def _run_audits() -> list[AuditResult]:
-        tasks = [mod.audit() for mod in available.values()]
-        return await asyncio.gather(*tasks)
+        results = []
+        for _name, mod in available.items():
+            try:
+                result = await mod.audit()
+                results.append(result)
+            except AuthenticationRequired:
+                pass  # Silently skip in score view
+        return results
 
     results = _run_async(_run_audits())
     overall = compute_overall_score(results)
@@ -253,6 +379,100 @@ def score() -> None:
 
 
 @cli.group()
+def auth() -> None:
+    """Authenticate with social media platforms."""
+
+
+@auth.command("status")
+def auth_status() -> None:
+    """Show authentication status for all platforms."""
+    table = Table(title="Authentication Status")
+    table.add_column("Platform", style="bold")
+    table.add_column("Authenticated", justify="center")
+    table.add_column("Token Expiry")
+
+    for platform in sorted(OAUTH_CONFIGS.keys()):
+        token = TokenStore.load(platform)
+        if token is None:
+            table.add_row(platform, "[red]no[/red]", "-")
+        elif token.is_expired:
+            table.add_row(platform, "[yellow]expired[/yellow]", "Expired")
+        else:
+            if token.expires_at:
+                remaining = token.expires_at - time.time()
+                hours = int(remaining // 3600)
+                minutes = int((remaining % 3600) // 60)
+                expiry = f"{hours}h {minutes}m remaining"
+            else:
+                expiry = "No expiry"
+            table.add_row(platform, "[green]yes[/green]", expiry)
+
+    console.print(table)
+
+
+@auth.command("revoke")
+@click.argument("platform")
+def auth_revoke(platform: str) -> None:
+    """Revoke authentication for a platform."""
+    if platform not in OAUTH_CONFIGS:
+        console.print(
+            f"[red]Unknown platform: {platform}. Available: {', '.join(OAUTH_CONFIGS.keys())}[/red]"
+        )
+        sys.exit(1)
+
+    TokenStore.delete(platform)
+    console.print(f"[green]Revoked authentication for {platform}.[/green]")
+
+
+def _auth_platform(platform: str) -> None:
+    """Run OAuth flow for a platform."""
+    if platform not in OAUTH_CONFIGS:
+        console.print(
+            f"[red]Unknown platform: {platform}. Available: {', '.join(OAUTH_CONFIGS.keys())}[/red]"
+        )
+        sys.exit(1)
+
+    config = OAUTH_CONFIGS[platform]
+
+    try:
+        client_id, client_secret = get_platform_credentials(platform)
+    except ValueError as e:
+        console.print(f"[red]{e}[/red]")
+        sys.exit(1)
+
+    console.print(f"Opening browser for {platform} authentication...")
+    console.print(f"[dim]Redirect URI: {REDIRECT_URI}[/dim]\n")
+
+    try:
+        flow = OAuthFlow(
+            authorize_url=config["authorize_url"],
+            token_url=config["token_url"],
+            client_id=client_id,
+            client_secret=client_secret,
+            scopes=config["scopes"],
+            extra_params=config.get("extra_params", {}),
+        )
+        token = flow.run()
+        TokenStore.save(platform, token)
+        console.print(f"\n[green]Successfully authenticated with {platform}![/green]")
+    except Exception as e:
+        console.print(f"\n[red]Authentication failed: {e}[/red]")
+        sys.exit(1)
+
+
+@auth.command("reddit")
+def auth_reddit() -> None:
+    """Authenticate with Reddit."""
+    _auth_platform("reddit")
+
+
+@auth.command("youtube")
+def auth_youtube() -> None:
+    """Authenticate with YouTube."""
+    _auth_platform("youtube")
+
+
+@cli.group()
 def noise() -> None:
     """Generate noise to obfuscate your digital profile."""
 
@@ -264,11 +484,15 @@ def noise() -> None:
     is_flag=True,
     help="Actually send search queries (default is dry-run).",
 )
-@click.option(
-    "--categories", "-c", help="Comma-separated categories (e.g. politics,religion)."
-)
+@click.option("--categories", "-c", help="Comma-separated categories (e.g. politics,religion).")
 @click.option("--count", "-n", default=50, help="Number of queries to generate.")
 @click.option("--engines", "-e", help="Comma-separated engines (e.g. google,bing).")
+@click.option(
+    "--country",
+    "-C",
+    default=None,
+    help="Country code for localized queries (e.g. us, fr). Default from config or 'us'.",
+)
 @click.option(
     "--dry-run",
     "dry_run_flag",
@@ -281,10 +505,12 @@ def noise_search(
     categories: str | None,
     count: int,
     engines: str | None,
+    country: str | None,
     dry_run_flag: bool,
 ) -> None:
     """Generate balanced search queries to poison your search profile."""
-    from dont_track_me.modules.search_noise.protector import protect_search_noise
+    if country is None:
+        country = get_default_country()
 
     dry_run = not apply_
 
@@ -299,6 +525,7 @@ def noise_search(
             categories=categories,
             count=count,
             engines=engines,
+            country=country,
         )
 
         if result.dry_run:
@@ -326,32 +553,32 @@ def noise_search(
     is_flag=True,
     help="Generate follow lists (default is dry-run).",
 )
-@click.option(
-    "--platforms", "-p", help="Comma-separated platforms (e.g. instagram,youtube)."
-)
-@click.option(
-    "--categories", "-c", help="Comma-separated categories (e.g. politics,music)."
-)
+@click.option("--platforms", "-p", help="Comma-separated platforms (e.g. instagram,youtube).")
+@click.option("--categories", "-c", help="Comma-separated categories (e.g. politics,music).")
 @click.option("--per-subcategory", default=2, help="Accounts to pick per perspective.")
 @click.option(
-    "--format", "output_format", type=click.Choice(["rich", "json"]), default="rich"
+    "--country",
+    "-C",
+    default=None,
+    help="Country code for localized accounts (e.g. us, fr). Default from config or 'us'.",
 )
+@click.option("--format", "output_format", type=click.Choice(["rich", "json"]), default="rich")
 def noise_social(
     apply_: bool,
     platforms: str | None,
     categories: str | None,
     per_subcategory: int,
+    country: str | None,
     output_format: str,
 ) -> None:
     """Generate balanced follow lists to obfuscate your social media profile."""
-    from dont_track_me.modules.social_noise.protector import protect_social_noise
+    if country is None:
+        country = get_default_country()
 
     dry_run = not apply_
 
     if dry_run:
-        console.print(
-            "[yellow]Dry-run mode — use --apply to generate follow lists.[/yellow]\n"
-        )
+        console.print("[yellow]Dry-run mode — use --apply to generate follow lists.[/yellow]\n")
 
     async def _run() -> None:
         result = await protect_social_noise(
@@ -360,6 +587,7 @@ def noise_social(
             categories=categories,
             per_subcategory=per_subcategory,
             output_format=output_format,
+            country=country,
         )
 
         if result.dry_run:
@@ -372,9 +600,7 @@ def noise_social(
                 for action in result.actions_taken:
                     click.echo(action)
             else:
-                console.print(
-                    Panel("[bold]Follow These Accounts[/bold]", style="green")
-                )
+                console.print(Panel("[bold]Follow These Accounts[/bold]", style="green"))
                 for action in result.actions_taken:
                     if action.startswith("---"):
                         console.print(f"\n[bold]{action}[/bold]")
@@ -403,12 +629,20 @@ def status() -> None:
     table.add_column("Module", style="bold")
     table.add_column("Description")
     table.add_column("Available", justify="center")
+    table.add_column("Auth", justify="center")
     table.add_column("Dependencies")
 
     for name, mod in sorted(all_modules.items()):
         available = mod.is_available()
         deps = ", ".join(mod.get_dependencies()) or "none"
         status_icon = "[green]yes[/green]" if available else "[red]no[/red]"
-        table.add_row(name, mod.description, status_icon, deps)
+
+        # Auth status for OAuth modules
+        if isinstance(mod, OAuthModule):
+            auth_icon = "[green]yes[/green]" if mod.is_authenticated() else "[red]no[/red]"
+        else:
+            auth_icon = "[dim]-[/dim]"
+
+        table.add_row(name, mod.description, status_icon, auth_icon, deps)
 
     console.print(table)

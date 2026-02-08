@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import importlib
+import inspect
 import pkgutil
 from typing import TYPE_CHECKING
 
@@ -41,6 +42,7 @@ def _discover_modules() -> None:
                 isinstance(attr, type)
                 and issubclass(attr, BaseModule)
                 and attr is not BaseModule
+                and not inspect.isabstract(attr)
             ):
                 instance = attr()
                 _registry[instance.name] = instance

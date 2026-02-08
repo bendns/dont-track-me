@@ -1,16 +1,20 @@
 """Tests for the module registry and scoring engine."""
 
-from dont_track_me.core.base import AuditResult, Finding, ThreatLevel
+from dont_track_me.core.base import AuditResult
 from dont_track_me.core.registry import get_all_modules, get_module
 from dont_track_me.core.scoring import compute_overall_score, get_score_label
 
 
 def test_discover_modules():
-    """All 3 MVP modules should be discovered."""
+    """All modules should be discovered."""
     modules = get_all_modules()
     assert "dns" in modules
     assert "headers" in modules
     assert "metadata" in modules
+    assert "search_noise" in modules
+    assert "social_noise" in modules
+    assert "reddit" in modules
+    assert "youtube" in modules
 
 
 def test_get_module():
@@ -26,6 +30,7 @@ def test_get_unknown_module():
 
 def test_module_has_educational_content():
     mod = get_module("dns")
+    assert mod is not None
     content = mod.get_educational_content()
     assert "DNS" in content
     assert len(content) > 100

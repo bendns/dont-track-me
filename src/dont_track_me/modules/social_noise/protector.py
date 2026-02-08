@@ -41,6 +41,7 @@ async def protect_social_noise(
     categories: str | None = None,
     per_subcategory: int = 2,
     output_format: str = "rich",
+    country: str = "us",
     **kwargs,
 ) -> ProtectionResult:
     """Generate balanced social media follow lists.
@@ -51,6 +52,7 @@ async def protect_social_noise(
         categories: Comma-separated category names (default: all).
         per_subcategory: Number of accounts to pick from each perspective.
         output_format: "rich" for readable output, "json" for machine-readable.
+        country: ISO 3166-1 alpha-2 country code (default: us).
     """
     actions_available: list[str] = []
     actions_taken: list[str] = []
@@ -59,20 +61,15 @@ async def protect_social_noise(
     if platforms:
         platform_list = [p.strip() for p in platforms.split(",")]
     else:
-        platform_list = get_all_platforms()
+        platform_list = get_all_platforms(country)
 
     # Parse categories
-    if categories:
-        cat_list = [c.strip() for c in categories.split(",")]
-    else:
-        cat_list = None  # All categories
+    cat_list = [c.strip() for c in categories.split(",")] if categories else None
 
-    actions_available.append(
-        f"Generate balanced follow lists for: {', '.join(platform_list)}"
-    )
+    actions_available.append(f"Generate balanced follow lists for: {', '.join(platform_list)}")
 
     for p in platform_list:
-        cats = get_platform_categories(p)
+        cats = get_platform_categories(p, country)
         if cat_list:
             cats = [c for c in cats if c in cat_list]
         if cats:
@@ -85,6 +82,7 @@ async def protect_social_noise(
             platforms=platform_list,
             categories=cat_list,
             per_subcategory=per_subcategory,
+            country=country,
         )
 
         if output_format == "json":
@@ -98,9 +96,7 @@ async def protect_social_noise(
             actions_taken.append(
                 f"\nTotal: {total} accounts to follow across {len(follow_list)} platforms"
             )
-            actions_taken.append(
-                "Follow these accounts to balance your social media profile."
-            )
+            actions_taken.append("Follow these accounts to balance your social media profile.")
 
     return ProtectionResult(
         module_name="social_noise",

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import tomllib
 from pathlib import Path
 from typing import Any
@@ -18,10 +19,7 @@ def load_config(path: Path | None = None) -> dict[str, Any]:
     Searches default paths if no explicit path is given.
     Returns an empty dict if no config file is found.
     """
-    if path is not None:
-        paths = [path]
-    else:
-        paths = DEFAULT_CONFIG_PATHS
+    paths = [path] if path is not None else DEFAULT_CONFIG_PATHS
 
     for p in paths:
         if p.exists():
@@ -29,3 +27,12 @@ def load_config(path: Path | None = None) -> dict[str, Any]:
                 return tomllib.load(f)
 
     return {}
+
+
+def get_default_country() -> str:
+    """Get default country code: DTM_COUNTRY env var → config.toml → 'us'."""
+    env = os.environ.get("DTM_COUNTRY")
+    if env:
+        return env.lower()
+    config = load_config()
+    return config.get("country", "us").lower()
