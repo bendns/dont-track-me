@@ -5,7 +5,10 @@ from __future__ import annotations
 import asyncio
 import json
 import sys
+import tempfile
 import time
+import webbrowser
+from pathlib import Path
 from typing import Any
 
 import click
@@ -142,7 +145,16 @@ def cli() -> None:
 @cli.command()
 @click.argument("module_name", required=False)
 @click.option("--modules", "-m", help="Comma-separated list of modules to audit.")
-@click.option("--format", "output_format", type=click.Choice(["rich", "json"]), default="rich")
+@click.option(
+    "--format", "output_format", type=click.Choice(["rich", "json", "html"]), default="rich"
+)
+@click.option(
+    "--output",
+    "-o",
+    type=click.Path(),
+    default=None,
+    help="Output file path (for html format). Defaults to a temp file.",
+)
 @click.option(
     "--interactive",
     "-i",
@@ -153,6 +165,7 @@ def audit(
     module_name: str | None,
     modules: str | None,
     output_format: str,
+    output: str | None,
     interactive: bool,
 ) -> None:
     """Run privacy audits. Optionally specify a single module or --modules list."""
@@ -214,14 +227,29 @@ def audit(
 
     results = _run_async(_run_audits())
 
+    overall = compute_overall_score(results)
+
     if output_format == "json":
         data = [r.model_dump() for r in results]
         click.echo(json.dumps(data, indent=2))
+    elif output_format == "html":
+        from dont_track_me.core.report import generate_html_report
+
+        html_content = generate_html_report(results, overall)
+        if output:
+            report_path = Path(output)
+            report_path.write_text(html_content)
+        else:
+            fd, tmp = tempfile.mkstemp(suffix=".html", prefix="dtm-report-")
+            with open(fd, "w") as f:
+                f.write(html_content)
+            report_path = Path(tmp)
+        console.print(f"[green]Report saved to {report_path}[/green]")
+        webbrowser.open(report_path.as_uri())
     else:
         console.print(Panel("[bold]Privacy Audit Results[/bold]", style="blue"))
         for result in results:
             _render_audit_result(result)
-        overall = compute_overall_score(results)
         color = get_score_color(overall)
         label = get_score_label(overall)
         console.print(f"\n[bold]Overall Score:[/bold] [{color}]{overall}/100 ({label})[/{color}]\n")
