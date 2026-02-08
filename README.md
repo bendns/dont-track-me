@@ -269,6 +269,7 @@ dtm info webrtc          # How WebRTC leaks your real IP behind a VPN
 dtm info email           # How email tracking pixels spy on you
 dtm info cookies         # How third-party cookies track you across the web
 dtm info fingerprint     # How browser fingerprinting identifies you without cookies
+dtm info social          # How social media trackers follow you everywhere
 ```
 
 ### Score — Your privacy at a glance
@@ -292,6 +293,7 @@ Returns a weighted score from 0 (fully exposed) to 100 (fully protected) with a 
 | **email** | Detects and strips email tracking pixels (1x1 images, known tracker domains) in .eml files | [Email Tracking Pixels — Someone Knows You Read This](src/dont_track_me/modules/email/info.md) |
 | **cookies** | Analyzes browser cookie databases (Chrome/Firefox) for third-party tracking cookies; deletes tracker cookies on protect | [Browser Cookies & Third-Party Tracking](src/dont_track_me/modules/cookies/info.md) |
 | **fingerprint** | Detects browser fingerprinting exposure (Canvas, WebGL, fonts, extensions); optional Playwright-based JS measurement; hardens Firefox via user.js | [Browser Fingerprinting](src/dont_track_me/modules/fingerprint/info.md) |
+| **social** | Detects social media tracker cookies, checks browser tracking protection (ETP/Shields), anti-tracker extensions, hosts-file blocking, and DNS-level blocking | [Social Media Trackers](src/dont_track_me/modules/social/info.md) |
 
 ### API modules (authenticated)
 
@@ -351,6 +353,7 @@ src/dont_track_me/
     ├── email/            # Email tracking pixel detection & stripping
     ├── cookies/          # Browser cookie analysis & tracker cookie removal
     ├── fingerprint/      # Browser fingerprint detection & hardening
+    ├── social/           # Social media tracker detection & blocking
     ├── instagram/        # Instagram privacy checklist (interactive)
     ├── tiktok/           # TikTok privacy checklist (interactive)
     └── facebook/         # Facebook privacy checklist (interactive)
@@ -367,8 +370,106 @@ pytest -v
 
 Future modules, ordered by priority:
 
-1. **social** — Social media tracker/pixel blocking (lower priority — browser extensions already cover this)
-2. **behavior** — Behavioral fingerprinting detection (typing/mouse patterns — research-grade, high effort)
+### Defensive
+
+1. **secrets** — Local secrets exposure audit (leaked credentials in `.env`, `.git/config`, shell history, plaintext API keys, browser saved passwords)
+2. **ssh** — SSH key hygiene (key age, algorithm strength, `authorized_keys` audit, agent forwarding, `known_hosts` fingerprinting vector)
+3. **certificates** — TLS/SSL certificate audit (system trust store, browser cert stores, expired/weak/untrusted CAs, self-signed certs)
+4. **app_permissions** — macOS app permission audit (TCC database: camera, microphone, location, contacts, screen recording — flag over-permissioned apps)
+5. **location** — Location data leakage audit (Wi-Fi SSID history, location services permissions, timezone vs VPN mismatch detection)
+6. **network** — Local network exposure (mDNS/Bonjour hostname broadcasting, open ports, UPnP, ARP visibility on shared networks)
+7. **bluetooth** — Bluetooth trackability (discoverability state, paired device history, BLE beacon exposure used by retail/airports)
+8. **clipboard** — Clipboard privacy (clipboard manager plaintext storage, clipboard access permissions, clipboard-sniffing app detection)
+9. **prism_exposure** — PRISM surveillance exposure audit (detect email accounts, cloud sync clients, messaging apps, browsers, and password managers linked to PRISM-participating companies — recommend privacy-focused alternatives from [PRISM Break](https://prism-break.org/))
+10. **behavior** — Behavioral fingerprinting detection (typing/mouse patterns — research-grade, high effort)
+
+### Offensive
+
+11. **browse_noise** — Browsing history noise injection (open decoy URLs across diverse categories to dilute browsing profiles)
+12. **email_noise** — Newsletter subscription noise (subscribe to diverse mailing lists to poison email interest profiles)
+
+### Platform-specific
+
+13. **twitter** — Twitter/X privacy checklist (protected tweets, location tagging, DM settings, personalization, connected apps)
+14. **linkedin** — LinkedIn privacy checklist (visibility settings, activity broadcasts, ad targeting, third-party data sharing)
+
+### Cross-cutting
+
+15. **summary** — Cross-module correlation insights (connect dots across modules: "DNS leaks + unique fingerprint = identifiable even with VPN")
+16. **export** — Data portability and trending (structured JSON/CSV export, score diffing over time, periodic re-audit)
+
+### Enhancements to existing modules
+
+- **cookies** — Add localStorage/sessionStorage audit (Firefox `webappsstore.sqlite`, Chrome `Local Storage/leveldb/`) and evercookie detection (cross-reference tracker IDs across cookies, localStorage, IndexedDB)
+- **fingerprint** — Add advertising ID check (macOS `defaults read` for ad tracking limit, IDFA exposure)
+- **ssh** — Add post-quantum readiness check (flag RSA/ECDSA keys vulnerable to quantum computing, recommend Ed25519 or PQ algorithms)
+- **certificates** — Add post-quantum cipher suite audit (flag TLS configs using quantum-vulnerable crypto, check GPG key types)
+- **dns** — Flag PRISM-adjacent DNS resolvers (Google DNS 8.8.8.8, OpenDNS 208.67.222.222) and recommend privacy-focused alternatives (dnscrypt-proxy, Mullvad DNS)
+- **email** — Flag messages routed through PRISM-participating servers (Gmail, Outlook, Yahoo) based on Received headers
+- **metadata** — Flag GPS/location EXIF data as high-risk for aggregation (photo location + timestamp = movement pattern for Palantir-style systems)
+- **location** *(planned)* — Add ALPR awareness: educational content about license plate reader networks and physical movement surveillance
+
+### Research references
+
+Sources informing the roadmap — academic papers, government reports, and institutional research:
+
+**Secrets & credentials**
+- [GitGuardian — State of Secrets Sprawl 2024](https://www.gitguardian.com/state-of-secrets-sprawl-report-2024) — 12.8M secrets leaked on GitHub in 2023 (+28% YoY); 39M in 2024
+- [GitHub Blog — 39M secret leaks in 2024](https://github.blog/security/application-security/next-evolution-github-advanced-security/)
+
+**SSH & cryptography**
+- [NIST IR 7966 — Security of Interactive and Automated Access Management Using SSH](https://nvlpubs.nist.gov/nistpubs/ir/2015/nist.ir.7966.pdf)
+- [NIST SP 800-57 — Recommendation for Key Management](https://nvlpubs.nist.gov/nistpubs/specialpublications/nist.sp.800-57pt1r5.pdf)
+
+**Post-quantum**
+- [NIST — First 3 Finalized Post-Quantum Encryption Standards (2024)](https://www.nist.gov/news-events/news/2024/08/nist-releases-first-3-finalized-post-quantum-encryption-standards) — FIPS 203/204/205
+- [NIST IR 8547 — Transition to Post-Quantum Cryptography Standards](https://csrc.nist.gov/pubs/ir/8547/ipd)
+
+**Machine identity security**
+- [CyberArk — State of Machine Identity Security 2025](https://www.cyberark.com/) — 50% of orgs reported machine identity breaches; 72% had certificate-related outages
+
+**Browser tracking & fingerprinting**
+- [Acar et al. — The Web Never Forgets: Persistent Tracking Mechanisms in the Wild (ACM CCS 2014)](https://dl.acm.org/doi/10.1145/2660267.2660347) — first large-scale study of canvas fingerprinting, evercookies, cookie syncing
+- [W3C — Mitigating Browser Fingerprinting in Web Specifications](https://w3c.github.io/fingerprinting-guidance/)
+- [Kohli et al. — Guarding Digital Privacy: Exploring User Profiling and Security Enhancements (arXiv:2504.07107)](https://arxiv.org/abs/2504.07107) — survey of user profiling techniques, data broker pipelines, PII leakage in mobile apps
+
+**Wi-Fi & location tracking**
+- [Matte et al. — Wi-Fi Probe Requests and Location Privacy](https://www.researchgate.net/publication/334890866) — SSIDs in probe requests leak names, locations, travel history
+- [Nature Scientific Reports — Compromising Location Privacy Through Wi-Fi RSSI Tracking (2025)](https://www.nature.com/articles/s41598-025-22799-1)
+
+**Clipboard privacy**
+- [Mysk — KlipboardSpy: iOS Clipboard Access PoC](https://www.mysk.blog/) — demonstrated 54 iOS apps (including TikTok) reading clipboard without consent
+- [Sophos — iOS 14 Flags TikTok and 53 Other Apps Spying on Clipboards](https://news.sophos.com/en-us/2020/06/30/ios-14-flags-tiktok-53-other-apps-spying-on-iphone-clipboards/)
+
+**macOS permissions (TCC)**
+- [SentinelOne — Bypassing macOS TCC User Privacy Protections](https://www.sentinelone.com/labs/bypassing-macos-tcc-user-privacy-protections-by-accident-and-design/)
+- [MITRE ATT&CK T1548.006 — TCC Manipulation](https://attack.mitre.org/techniques/T1548/006/)
+
+**Network exposure (mDNS)**
+- [Fingerprint.com — Brute-Forcing a macOS User's Real Name via mDNS](https://fingerprint.com/blog/apple-macos-mdns-brute-force/)
+
+**BLE tracking**
+- [MDPI — Digital Advertising and Customer Movement Analysis Using BLE Beacon Technology in Retail](https://www.mdpi.com/0718-1876/20/2/55)
+
+**Data brokers**
+- [FTC — Data Brokers: A Call for Transparency and Accountability (2014)](https://www.ftc.gov/system/files/documents/reports/data-brokers-call-transparency-accountability-report-federal-trade-commission-may-2014/140527databrokerreport.pdf) — study of 9 major data brokers (Acxiom, Datalogix, Experian, etc.)
+- [Duke University Tech Policy — Data Brokers and Sensitive Data on U.S. Individuals](https://techpolicy.sanford.duke.edu/report-data-brokers-and-sensitive-data-on-u-s-individuals/)
+
+**PRISM & mass surveillance**
+- [EFF — Upstream vs. PRISM](https://www.eff.org/pages/upstream-prism)
+- [ACLU — NSA Dragnet Searches of Communications](https://www.aclu.org/news/national-security/guide-what-we-now-know-about-nsas-dragnet-searches-your)
+- [Brookings Institution — Beyond Snowden: Privacy, Mass Surveillance, and the Struggle to Reform the NSA](https://www.brookings.edu/wp-content/uploads/2016/09/chapter-one_-beyond-snowden-9780815730644.pdf)
+- [PRISM Break — Opt Out of Global Surveillance Programs](https://prism-break.org/)
+
+**Palantir & aggregation platforms**
+- [Parsons — The Seer and the Seen: Surveying Palantir's Surveillance Platform (Information Society, 2022)](https://www.tandfonline.com/doi/full/10.1080/01972243.2022.2100851) — computational analysis of 155 Palantir surveillance patents
+- [The Intercept — How Palantir Helped the NSA Spy on the Whole World (2017)](https://theintercept.com/2017/02/22/how-peter-thiels-palantir-helped-the-nsa-spy-on-the-whole-world/)
+- [Vice — Palantir's Top-Secret User Manual for Cops (2019)](https://www.vice.com/en/article/revealed-this-is-palantirs-top-secret-user-manual-for-cops/)
+
+**ALPR / license plate surveillance**
+- [EFF — Automated License Plate Readers (ALPR)](https://www.eff.org/cases/automated-license-plate-readers)
+- [Brennan Center for Justice — ALPR: Legal Status and Policy Recommendations](https://www.brennancenter.org/our-work/research-reports/automatic-license-plate-readers-legal-status-and-policy-recommendations)
+- [ACLU — Automatic License Plate Readers](https://www.aclu.org/issues/privacy-technology/location-tracking/automatic-license-plate-readers)
 
 ## Contributing
 
