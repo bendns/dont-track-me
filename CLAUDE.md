@@ -60,4 +60,6 @@ Intentionally excluded:
 - Mock external deps (keyring, httpx, subprocess) -- tests must run offline
 - Use `assert obj is not None` before accessing attributes from functions returning `T | None`
 - Always run both `ruff check` and `pytest` before considering work done
+- Always run `/review` for security and bug checks before pushing
 - Always verify that README.md and CLAUDE.md are up-to-date after any changes (new modules, new CLI flags, new conventions, new ruff rules, etc.)
+- After adding modules or major features, check if the GitHub repo description and topics need updating (`gh repo edit --description`, `gh repo edit --add-topic`)
