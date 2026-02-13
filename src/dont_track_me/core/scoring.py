@@ -26,6 +26,7 @@ MODULE_WEIGHTS: dict[str, int] = {
     "behavior": 5,
     "app_permissions": 8,
     "location": 8,
+    "ad_tracking": 12,
 }
 
 DEFAULT_WEIGHT = 5

@@ -26,7 +26,7 @@ tests/
 ## Commands
 
 - **Lint**: `uv run ruff check src/ tests/`
-- **Tests**: `uv run pytest -q` (400 tests, ~1.8s)
+- **Tests**: `uv run pytest -q` (428 tests, ~2.5s)
 - **Install dev**: `uv sync --extra dev`
 - **Run CLI**: `uv run dtm status`, `uv run dtm audit`, `uv run dtm score`, `uv run dtm protect`, `uv run dtm noise search`, `uv run dtm noise social`
 
