@@ -1,0 +1,70 @@
+brokers:
+  # --- Courtiers de donnees francais / europeens ---
+  - name: "Criteo"
+    category: "ad exchange"
+    url: "https://www.criteo.com"
+    opt_out_url: "https://www.criteo.com/privacy/disable-criteo-services-on-internet-browsers/"
+    notes: >
+      Plus grand ad-tech francais. Specialise dans le retargeting
+      publicitaire. Utilise des cookies et des identifiants publicitaires
+      pour suivre les utilisateurs sur le web et les applications.
+
+  - name: "Teads"
+    category: "ad exchange"
+    url: "https://www.teads.com"
+    opt_out_url: "https://www.teads.com/privacy-policy/"
+    notes: >
+      Plateforme publicitaire video francaise. Collecte des donnees
+      de navigation et de visionnage pour le ciblage publicitaire.
+
+  - name: "Smart AdServer (Equativ)"
+    category: "ad exchange"
+    url: "https://www.equativ.com"
+    opt_out_url: "https://www.equativ.com/end-user-privacy-policy/"
+    notes: >
+      SSP et ad server francais. Traite les encheres publicitaires
+      en temps reel (RTB) pour des editeurs europeens.
+
+  - name: "Commanders Act"
+    category: "data aggregator"
+    url: "https://www.commandersact.com"
+    opt_out_url: "https://www.commandersact.com/en/privacy/"
+    notes: >
+      Plateforme de gestion des donnees (CDP) francaise. Collecte
+      et unifie les donnees utilisateur pour le marketing.
+
+  - name: "Weborama"
+    category: "data aggregator"
+    url: "https://www.weborama.com"
+    opt_out_url: "https://weborama.com/en/opt-out/"
+    notes: >
+      Specialiste francais du ciblage semantique et comportemental.
+      Analyse le contenu des pages visitees pour construire des profils.
+
+  - name: "Didomi"
+    category: "consent management"
+    url: "https://www.didomi.io"
+    opt_out_url: "https://www.didomi.io/privacy-policy"
+    notes: >
+      Plateforme de gestion du consentement (CMP). Ironie : les CMP
+      collectent elles-memes des donnees sur les choix de consentement.
+
+  - name: "Sirdata"
+    category: "data aggregator"
+    url: "https://www.sirdata.com"
+    opt_out_url: "https://www.sirdata.com/en/opt-out/"
+    notes: >
+      Courtier de donnees francais specialise dans les segments
+      d'audience pour la publicite programmatique. Sanctionne
+      par la CNIL en 2022 pour defaut de consentement.
+
+  # --- Recours institutionnels ---
+  - name: "CNIL (exercice des droits)"
+    category: "regulatory"
+    url: "https://www.cnil.fr"
+    opt_out_url: "https://www.cnil.fr/fr/exercer-ses-droits"
+    notes: >
+      Autorite francaise de protection des donnees. Vous pouvez
+      exercer vos droits d'acces, de suppression et d'opposition
+      aupres de tout organisme traitant vos donnees. En cas de
+      refus, deposez une plainte aupres de la CNIL.

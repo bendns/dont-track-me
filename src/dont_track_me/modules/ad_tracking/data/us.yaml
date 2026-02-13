@@ -1,0 +1,126 @@
+brokers:
+  # --- Data aggregators ---
+  - name: "LiveRamp (formerly Acxiom)"
+    category: "data aggregator"
+    url: "https://liveramp.com"
+    opt_out_url: "https://liveramp.com/opt_out/"
+    notes: >
+      One of the largest data brokers. Links offline and online identities
+      across devices via its IdentityLink graph.
+
+  - name: "Oracle Data Cloud (BlueKai)"
+    category: "data aggregator"
+    url: "https://www.oracle.com/cx/advertising/"
+    opt_out_url: "https://datacloudoptout.oracle.com/"
+    notes: >
+      Operates one of the largest third-party data marketplaces.
+      Aggregates data from app SDKs, web tracking, and purchase data.
+
+  - name: "Epsilon"
+    category: "data aggregator"
+    url: "https://www.epsilon.com"
+    opt_out_url: "https://www.epsilon.com/privacy/consumer-opt-out"
+    notes: >
+      Maintains profiles on 250M+ US consumers. Owned by Publicis Groupe.
+
+  - name: "Experian Marketing Services"
+    category: "data aggregator"
+    url: "https://www.experian.com/marketing-services"
+    opt_out_url: "https://www.experian.com/privacy/opting_out"
+    notes: >
+      Credit bureau that also sells marketing data segments derived from
+      credit and demographic data.
+
+  - name: "LexisNexis Risk Solutions"
+    category: "data aggregator"
+    url: "https://risk.lexisnexis.com"
+    opt_out_url: "https://optout.lexisnexis.com/"
+    notes: >
+      Aggregates public records, court filings, property records, and
+      commercial data. Used by law enforcement and insurance.
+
+  - name: "Kochava"
+    category: "data aggregator"
+    url: "https://www.kochava.com"
+    opt_out_url: "https://www.kochava.com/opt-out/"
+    notes: >
+      Mobile attribution and analytics. FTC sued Kochava in 2022 for
+      selling geolocation data that could track visits to reproductive
+      health clinics, addiction recovery centers, and places of worship.
+
+  - name: "Near Intelligence (now Azira)"
+    category: "data aggregator"
+    url: "https://azira.com"
+    opt_out_url: "https://azira.com/opt-out/"
+    notes: >
+      Collects location data from mobile apps and sells movement
+      analytics. Filed for bankruptcy in 2023 after privacy scrutiny.
+
+  - name: "X-Mode Social (now Outlogic)"
+    category: "data aggregator"
+    url: "https://www.outlogic.io"
+    opt_out_url: "https://www.outlogic.io/opt-out"
+    notes: >
+      Collects location data from hundreds of apps. Sold data to US
+      military contractors. Acquired by Digital Envoy.
+
+  - name: "Gravy Analytics"
+    category: "data aggregator"
+    url: "https://gravyanalytics.com"
+    opt_out_url: "https://gravyanalytics.com/privacy-policy/"
+    notes: >
+      Location data broker. Parent company Unacast processes billions
+      of location signals daily from mobile ad exchanges.
+
+  # --- People search / public records ---
+  - name: "Spokeo"
+    category: "people search"
+    url: "https://www.spokeo.com"
+    opt_out_url: "https://www.spokeo.com/optout"
+    notes: >
+      Aggregates social media, public records, and marketing data into
+      searchable people profiles.
+
+  - name: "BeenVerified"
+    category: "people search"
+    url: "https://www.beenverified.com"
+    opt_out_url: "https://www.beenverified.com/faq/opt-out/"
+    notes: >
+      People search engine combining public records, social media, and
+      commercial data sources.
+
+  - name: "Whitepages (now Marchex)"
+    category: "people search"
+    url: "https://www.whitepages.com"
+    opt_out_url: "https://www.whitepages.com/suppression-requests"
+    notes: >
+      Phone and address lookup. Premium tier reveals detailed personal
+      information including property records and associates.
+
+  # --- Advertising intelligence / surveillance ---
+  - name: "Fog Data Science"
+    category: "advertising intelligence"
+    url: "https://www.fogds.com"
+    opt_out_url: ""
+    notes: >
+      Purchases advertising data to provide law enforcement with mobile
+      device tracking. Costs $5-9K/month per agency. No public opt-out.
+      Subject of EFF investigation.
+
+  - name: "Babel Street (Locate X)"
+    category: "advertising intelligence"
+    url: "https://www.babelstreet.com"
+    opt_out_url: ""
+    notes: >
+      Locate X product tracks mobile devices using advertising data.
+      Used by US government agencies including CBP, ICE, and the Secret
+      Service. 404 Media exposed its use to track abortion clinic visits.
+
+  - name: "Clearview AI"
+    category: "advertising intelligence"
+    url: "https://www.clearview.ai"
+    opt_out_url: "https://www.clearview.ai/privacy-requests"
+    notes: >
+      Facial recognition company that scraped billions of photos from
+      social media. Fined in multiple EU countries. Primarily used by
+      law enforcement.

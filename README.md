@@ -279,6 +279,7 @@ dtm info ssh             # How SSH keys affect your security posture
 dtm info certificates    # How TLS trust stores can be compromised
 dtm info app_permissions # How macOS app permissions expose your privacy
 dtm info location        # How location data leaks through Wi-Fi, timezone, and permissions
+dtm info ad_tracking     # How advertising IDs and data brokers track you across apps
 ```
 
 ### Score — Your privacy at a glance
@@ -308,6 +309,7 @@ Returns a weighted score from 0 (fully exposed) to 100 (fully protected) with a 
 | **certificates** | Audits system TLS trust store for expired, weak, or suspicious CAs (CNNIC, WoSign, DarkMatter); checks TLS version support | [TLS Certificates — The Foundation of Internet Trust](src/dont_track_me/modules/certificates/info.md) |
 | **app_permissions** | Audits macOS TCC database for over-permissioned apps (camera, microphone, accessibility, full disk access, screen recording) | [macOS App Permissions — The Keys to Your Digital Life](src/dont_track_me/modules/app_permissions/info.md) |
 | **location** | Audits Wi-Fi SSID history, timezone vs VPN mismatch, and macOS Location Services grants for location data leakage | [Location Data Leakage](src/dont_track_me/modules/location/info.md) |
+| **ad_tracking** | Audits advertising ID (IDFA) exposure, Safari tracking prevention, and data broker ecosystem risks with per-country opt-out guidance | [Advertising Data Ecosystem](src/dont_track_me/modules/ad_tracking/info.md) |
 
 ### API modules (authenticated)
 
@@ -377,7 +379,9 @@ src/dont_track_me/
     ├── ssh/              # SSH key hygiene audit
     ├── certificates/     # TLS certificate trust audit
     ├── app_permissions/  # macOS TCC permission audit
-    └── location/         # Location data leakage audit (Wi-Fi, timezone, TCC)
+    ├── location/         # Location data leakage audit (Wi-Fi, timezone, TCC)
+    └── ad_tracking/      # Advertising ID, Safari privacy, data broker audit
+        └── data/         #   Per-country broker YAML files (us.yaml, fr.yaml)
 ```
 
 ## Running tests
@@ -416,7 +420,7 @@ Future modules, ordered by priority:
 ### Enhancements to existing modules
 
 - **cookies** — Add localStorage/sessionStorage audit (Firefox `webappsstore.sqlite`, Chrome `Local Storage/leveldb/`) and evercookie detection (cross-reference tracker IDs across cookies, localStorage, IndexedDB)
-- **fingerprint** — Add advertising ID check (macOS `defaults read` for ad tracking limit, IDFA exposure)
+- **fingerprint** — ~~Add advertising ID check~~ (now covered by dedicated `ad_tracking` module)
 - **ssh** — Add post-quantum readiness check (flag RSA/ECDSA keys vulnerable to quantum computing, recommend Ed25519 or PQ algorithms)
 - **certificates** — Add post-quantum cipher suite audit (flag TLS configs using quantum-vulnerable crypto, check GPG key types)
 - **dns** — Flag PRISM-adjacent DNS resolvers (Google DNS 8.8.8.8, OpenDNS 208.67.222.222) and recommend privacy-focused alternatives (dnscrypt-proxy, Mullvad DNS)
