@@ -1,0 +1,74 @@
+{
+  "$defs": {
+    "Finding": {
+      "description": "A single audit finding \u2014 one specific privacy issue detected.",
+      "properties": {
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "description": {
+          "title": "Description",
+          "type": "string"
+        },
+        "threat_level": {
+          "$ref": "#/$defs/ThreatLevel"
+        },
+        "remediation": {
+          "title": "Remediation",
+          "type": "string"
+        }
+      },
+      "required": [
+        "title",
+        "description",
+        "threat_level",
+        "remediation"
+      ],
+      "title": "Finding",
+      "type": "object"
+    },
+    "ThreatLevel": {
+      "enum": [
+        "critical",
+        "high",
+        "medium",
+        "low",
+        "info"
+      ],
+      "title": "ThreatLevel",
+      "type": "string"
+    }
+  },
+  "description": "Result of running a module's audit.",
+  "properties": {
+    "module_name": {
+      "title": "Module Name",
+      "type": "string"
+    },
+    "score": {
+      "maximum": 100,
+      "minimum": 0,
+      "title": "Score",
+      "type": "integer"
+    },
+    "findings": {
+      "items": {
+        "$ref": "#/$defs/Finding"
+      },
+      "title": "Findings",
+      "type": "array"
+    },
+    "raw_data": {
+      "additionalProperties": true,
+      "title": "Raw Data",
+      "type": "object"
+    }
+  },
+  "required": [
+    "module_name",
+    "score"
+  ],
+  "title": "AuditResult",
+  "type": "object"
+}

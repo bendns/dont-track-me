@@ -1,0 +1,45 @@
+# Module weights for overall privacy score computation.
+# Higher weight = bigger impact on digital footprint.
+# Used by all platforms (CLI, Android, iOS).
+
+module_weights:
+  fingerprint: 20
+  cookies: 15
+  dns: 12
+  social: 12
+  headers: 10
+  metadata: 8
+  email: 8
+  search: 5
+  search_noise: 10
+  social_noise: 12
+  reddit: 10
+  youtube: 12
+  instagram: 10
+  tiktok: 10
+  facebook: 10
+  webrtc: 5
+  behavior: 5
+  app_permissions: 8
+  location: 8
+  ad_tracking: 12
+
+default_weight: 5
+
+# Score interpretation tiers (evaluated top-down, first match wins).
+score_tiers:
+  - min: 90
+    label: "Excellent"
+    color: "green"
+  - min: 70
+    label: "Good"
+    color: "blue"
+  - min: 50
+    label: "Moderate"
+    color: "yellow"
+  - min: 30
+    label: "Poor"
+    color: "dark_orange"
+  - min: 0
+    label: "Critical"
+    color: "red"

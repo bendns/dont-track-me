@@ -2,18 +2,22 @@
 
 from __future__ import annotations
 
+import yaml
 from pydantic import BaseModel
 
 from dont_track_me.core.base import Finding, ProtectionResult, ThreatLevel
+from dont_track_me.core.paths import SHARED_DIR
+
+
+def _load_threat_weights() -> dict[ThreatLevel, int]:
+    path = SHARED_DIR / "schema" / "threat_weights.yaml"
+    with open(path) as f:
+        data = yaml.safe_load(f)
+    return {ThreatLevel(k): v for k, v in data["threat_weights"].items()}
+
 
 # Score penalty per threat level when a check is unsafe
-THREAT_WEIGHTS: dict[ThreatLevel, int] = {
-    ThreatLevel.CRITICAL: 15,
-    ThreatLevel.HIGH: 10,
-    ThreatLevel.MEDIUM: 6,
-    ThreatLevel.LOW: 3,
-    ThreatLevel.INFO: 0,
-}
+THREAT_WEIGHTS: dict[ThreatLevel, int] = _load_threat_weights()
 
 
 class PrivacyCheck(BaseModel):

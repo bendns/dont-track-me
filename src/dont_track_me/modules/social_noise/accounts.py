@@ -11,11 +11,12 @@ from __future__ import annotations
 
 import random
 from functools import lru_cache
-from pathlib import Path
 
 import yaml
 
-DATA_DIR = Path(__file__).parent / "data"
+from dont_track_me.core.paths import SHARED_DIR
+
+DATA_DIR = SHARED_DIR / "data" / "social_noise"
 
 
 @lru_cache(maxsize=8)
@@ -23,12 +24,12 @@ def load_accounts(
     country: str = "us",
 ) -> dict[str, dict[str, dict[str, list[str]]]]:
     """Load account database for a country from YAML."""
-    path = DATA_DIR / f"{country}.yaml"
+    clean = "".join(c for c in country if c.isalnum()).lower() or "us"
+    path = DATA_DIR / f"{clean}.yaml"
     if not path.exists():
         available = sorted(p.stem for p in DATA_DIR.glob("*.yaml"))
         raise FileNotFoundError(
-            f"No account data for country '{country}'. "
-            f"Available: {', '.join(available)}"
+            f"No account data for country '{country}'. Available: {', '.join(available)}"
         )
     with open(path) as f:
         return yaml.safe_load(f)

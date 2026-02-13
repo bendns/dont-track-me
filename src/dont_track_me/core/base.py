@@ -5,7 +5,6 @@ from __future__ import annotations
 from abc import ABC, abstractmethod
 from enum import StrEnum
 from importlib.util import find_spec
-from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
 if TYPE_CHECKING:
@@ -69,10 +68,9 @@ class BaseModule(ABC):
         """Apply countermeasures. Dry-run by default — never modifies without --apply."""
         ...
 
-    @abstractmethod
     def get_educational_content(self) -> str:
         """Return markdown explaining the threat, how it works, and why VPN doesn't help."""
-        ...
+        return self._load_info_md()
 
     def get_checklist(self) -> list[PrivacyCheck] | None:
         """Return privacy checks for interactive checklist modules, or None."""
@@ -96,12 +94,10 @@ class BaseModule(ABC):
         return True
 
     def _load_info_md(self) -> str:
-        """Load the info.md file co-located with the module."""
-        # Subclasses live in modules/<name>/module.py, info.md is next to it
-        info_path = Path(self.__class__.__module__.replace(".", "/")).parent / "info.md"
-        # Resolve relative to src root
-        src_root = Path(__file__).resolve().parent.parent
-        abs_path = src_root / info_path
-        if abs_path.exists():
-            return abs_path.read_text()
+        """Load educational content from shared/content/<name>.md."""
+        from dont_track_me.core.paths import SHARED_DIR
+
+        info_path = SHARED_DIR / "content" / f"{self.name}.md"
+        if info_path.exists():
+            return info_path.read_text()
         return f"No educational content available for {self.display_name}."

@@ -2,12 +2,13 @@
 
 from __future__ import annotations
 
-from pathlib import Path
 from typing import Any
 
 import yaml
 
-_DATA_DIR = Path(__file__).parent / "data"
+from dont_track_me.core.paths import SHARED_DIR
+
+_DATA_DIR = SHARED_DIR / "data" / "ad_tracking"
 
 
 def load_brokers(country: str = "us") -> list[dict[str, Any]]:

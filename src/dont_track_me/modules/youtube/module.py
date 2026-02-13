@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-from pathlib import Path
 from typing import Any
 
 from dont_track_me.core.auth import OAuthModule
@@ -22,10 +21,6 @@ class YouTubeModule(OAuthModule):
 
     async def protect(self, dry_run: bool = True, **kwargs: Any) -> ProtectionResult:
         return await protect_youtube(dry_run=dry_run, **kwargs)
-
-    def get_educational_content(self) -> str:
-        info_path = Path(__file__).parent / "info.md"
-        return info_path.read_text()
 
     def get_dependencies(self) -> list[str]:
         return ["keyring"]

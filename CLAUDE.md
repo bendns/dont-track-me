@@ -5,10 +5,11 @@ Modular anti-tracking toolkit. Audits privacy exposure and applies countermeasur
 ## Project structure
 
 ```
+shared/                # Cross-platform content (educational md, YAML data, checklists, schemas)
 src/dont_track_me/
   cli/main.py          # Click CLI (dtm command)
-  core/                # Shared infra: base models, auth, config, registry, scoring, checklist
-  modules/             # Each module = directory with module.py, auditor.py, protector.py, info.md
+  core/                # Shared infra: base models, auth, config, registry, scoring, checklist, paths
+  modules/             # Each module = directory with module.py, auditor.py, protector.py
 tests/
   test_core/           # Core infrastructure tests
   test_modules/        # Per-module tests
@@ -49,8 +50,10 @@ Intentionally excluded:
 - Use ternary operators for simple if/else assignments
 - Narrow exceptions: catch specific types (e.g. `ValueError, KeyError`), not bare `Exception`
 - No in-function imports unless the dependency is optional (PIL, pypdf, keyring)
-- Educational content in `info.md` per module (Markdown)
-- Per-country data in YAML files under `modules/<name>/data/` (us.yaml, fr.yaml)
+- Educational content in `shared/content/<name>.md` (loaded automatically by BaseModule)
+- Per-country data in YAML files under `shared/data/<module>/` (us.yaml, fr.yaml)
+- Privacy checklists in `shared/checklists/<name>.yaml` (loaded by checks.py)
+- Scoring weights and threat weights in `shared/schema/` YAML files
 - File scanning uses `itertools.islice(rglob, MAX_FILES)` to prevent unbounded recursion
 
 ## Testing

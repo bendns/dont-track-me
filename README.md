@@ -296,43 +296,43 @@ Returns a weighted score from 0 (fully exposed) to 100 (fully protected) with a 
 
 | Module | What it does | Deep dive |
 |---|---|---|
-| **dns** | Detects DNS leaks, tracking DNS providers (Google, OpenDNS), and lack of encrypted DNS | [DNS Tracking — Your Browsing History in Plain Text](src/dont_track_me/modules/dns/info.md) |
-| **metadata** | Scans images for GPS/EXIF data and PDFs for author metadata; strips them on protect | [Metadata Leakage — Hidden Data in Your Files](src/dont_track_me/modules/metadata/info.md) |
-| **headers** | Analyzes HTTP headers (User-Agent, Accept-Language, Referer) for identity leaks | [HTTP Header Tracking — Your Browser's Business Card](src/dont_track_me/modules/headers/info.md) |
-| **webrtc** | Detects WebRTC IP leaks via STUN server queries that bypass VPNs | [WebRTC IP Leaks — Your VPN's Blind Spot](src/dont_track_me/modules/webrtc/info.md) |
-| **email** | Detects and strips email tracking pixels (1x1 images, known tracker domains) in .eml files | [Email Tracking Pixels — Someone Knows You Read This](src/dont_track_me/modules/email/info.md) |
-| **cookies** | Analyzes browser cookie databases (Chrome/Firefox) for third-party tracking cookies; deletes tracker cookies on protect | [Browser Cookies & Third-Party Tracking](src/dont_track_me/modules/cookies/info.md) |
-| **fingerprint** | Detects browser fingerprinting exposure (Canvas, WebGL, fonts, extensions); optional Playwright-based JS measurement; hardens Firefox via user.js | [Browser Fingerprinting](src/dont_track_me/modules/fingerprint/info.md) |
-| **social** | Detects social media tracker cookies, checks browser tracking protection (ETP/Shields), anti-tracker extensions, hosts-file blocking, and DNS-level blocking | [Social Media Trackers](src/dont_track_me/modules/social/info.md) |
-| **secrets** | Scans for leaked credentials in `.env` files, `.git/config`, shell history, unencrypted SSH keys, AWS credentials, and config files | [Local Secrets Exposure — Your Credentials Are Probably Leaking](src/dont_track_me/modules/secrets/info.md) |
-| **ssh** | Audits SSH key algorithm strength, passphrase protection, key age, agent forwarding, and known_hosts fingerprinting | [SSH Key Hygiene — Your Cryptographic Identity](src/dont_track_me/modules/ssh/info.md) |
-| **certificates** | Audits system TLS trust store for expired, weak, or suspicious CAs (CNNIC, WoSign, DarkMatter); checks TLS version support | [TLS Certificates — The Foundation of Internet Trust](src/dont_track_me/modules/certificates/info.md) |
-| **app_permissions** | Audits macOS TCC database for over-permissioned apps (camera, microphone, accessibility, full disk access, screen recording) | [macOS App Permissions — The Keys to Your Digital Life](src/dont_track_me/modules/app_permissions/info.md) |
-| **location** | Audits Wi-Fi SSID history, timezone vs VPN mismatch, and macOS Location Services grants for location data leakage | [Location Data Leakage](src/dont_track_me/modules/location/info.md) |
-| **ad_tracking** | Audits advertising ID (IDFA) exposure, Safari tracking prevention, and data broker ecosystem risks with per-country opt-out guidance | [Advertising Data Ecosystem](src/dont_track_me/modules/ad_tracking/info.md) |
+| **dns** | Detects DNS leaks, tracking DNS providers (Google, OpenDNS), and lack of encrypted DNS | [DNS Tracking — Your Browsing History in Plain Text](shared/content/dns.md) |
+| **metadata** | Scans images for GPS/EXIF data and PDFs for author metadata; strips them on protect | [Metadata Leakage — Hidden Data in Your Files](shared/content/metadata.md) |
+| **headers** | Analyzes HTTP headers (User-Agent, Accept-Language, Referer) for identity leaks | [HTTP Header Tracking — Your Browser's Business Card](shared/content/headers.md) |
+| **webrtc** | Detects WebRTC IP leaks via STUN server queries that bypass VPNs | [WebRTC IP Leaks — Your VPN's Blind Spot](shared/content/webrtc.md) |
+| **email** | Detects and strips email tracking pixels (1x1 images, known tracker domains) in .eml files | [Email Tracking Pixels — Someone Knows You Read This](shared/content/email.md) |
+| **cookies** | Analyzes browser cookie databases (Chrome/Firefox) for third-party tracking cookies; deletes tracker cookies on protect | [Browser Cookies & Third-Party Tracking](shared/content/cookies.md) |
+| **fingerprint** | Detects browser fingerprinting exposure (Canvas, WebGL, fonts, extensions); optional Playwright-based JS measurement; hardens Firefox via user.js | [Browser Fingerprinting](shared/content/fingerprint.md) |
+| **social** | Detects social media tracker cookies, checks browser tracking protection (ETP/Shields), anti-tracker extensions, hosts-file blocking, and DNS-level blocking | [Social Media Trackers](shared/content/social.md) |
+| **secrets** | Scans for leaked credentials in `.env` files, `.git/config`, shell history, unencrypted SSH keys, AWS credentials, and config files | [Local Secrets Exposure — Your Credentials Are Probably Leaking](shared/content/secrets.md) |
+| **ssh** | Audits SSH key algorithm strength, passphrase protection, key age, agent forwarding, and known_hosts fingerprinting | [SSH Key Hygiene — Your Cryptographic Identity](shared/content/ssh.md) |
+| **certificates** | Audits system TLS trust store for expired, weak, or suspicious CAs (CNNIC, WoSign, DarkMatter); checks TLS version support | [TLS Certificates — The Foundation of Internet Trust](shared/content/certificates.md) |
+| **app_permissions** | Audits macOS TCC database for over-permissioned apps (camera, microphone, accessibility, full disk access, screen recording) | [macOS App Permissions — The Keys to Your Digital Life](shared/content/app_permissions.md) |
+| **location** | Audits Wi-Fi SSID history, timezone vs VPN mismatch, and macOS Location Services grants for location data leakage | [Location Data Leakage](shared/content/location.md) |
+| **ad_tracking** | Audits advertising ID (IDFA) exposure, Safari tracking prevention, and data broker ecosystem risks with per-country opt-out guidance | [Advertising Data Ecosystem](shared/content/ad_tracking.md) |
 
 ### API modules (authenticated)
 
 | Module | What it does | Deep dive |
 |---|---|---|
-| **reddit** | Audits 7 privacy/tracking settings + subreddit bias; hardens settings and diversifies subscriptions via API | [Reddit Tracking — Your Preferences Betray You](src/dont_track_me/modules/reddit/info.md) |
-| **youtube** | Audits subscription bias by category/perspective; subscribes to diverse channels via API | [YouTube Profiling — Your Subscriptions Define You](src/dont_track_me/modules/youtube/info.md) |
+| **reddit** | Audits 7 privacy/tracking settings + subreddit bias; hardens settings and diversifies subscriptions via API | [Reddit Tracking — Your Preferences Betray You](shared/content/reddit.md) |
+| **youtube** | Audits subscription bias by category/perspective; subscribes to diverse channels via API | [YouTube Profiling — Your Subscriptions Define You](shared/content/youtube.md) |
 
 ### Checklist modules (interactive)
 
 | Module | What it does | Deep dive |
 |---|---|---|
-| **instagram** | Interactive privacy checklist (12 checks) covering account visibility, ad tracking, and Off-Instagram Activity | [Instagram Tracking — Your Photos Tell More Than You Think](src/dont_track_me/modules/instagram/info.md) |
-| **tiktok** | Interactive privacy checklist (12 checks) covering algorithm profiling, device fingerprinting, and ad data sharing | [TikTok Tracking — The Algorithm Knows You Better Than You Know Yourself](src/dont_track_me/modules/tiktok/info.md) |
-| **facebook** | Interactive privacy checklist (14 checks) covering Off-Facebook Activity, face recognition, and shadow profiles | [Facebook Tracking — The Most Complete Surveillance Machine Ever Built](src/dont_track_me/modules/facebook/info.md) |
-| **twitter** | Interactive privacy checklist (13 checks) covering protected tweets, ad personalization, and off-Twitter activity tracking | [Twitter/X Tracking — Your Tweets Tell More Than You Type](src/dont_track_me/modules/twitter/info.md) |
+| **instagram** | Interactive privacy checklist (12 checks) covering account visibility, ad tracking, and Off-Instagram Activity | [Instagram Tracking — Your Photos Tell More Than You Think](shared/content/instagram.md) |
+| **tiktok** | Interactive privacy checklist (12 checks) covering algorithm profiling, device fingerprinting, and ad data sharing | [TikTok Tracking — The Algorithm Knows You Better Than You Know Yourself](shared/content/tiktok.md) |
+| **facebook** | Interactive privacy checklist (14 checks) covering Off-Facebook Activity, face recognition, and shadow profiles | [Facebook Tracking — The Most Complete Surveillance Machine Ever Built](shared/content/facebook.md) |
+| **twitter** | Interactive privacy checklist (13 checks) covering protected tweets, ad personalization, and off-Twitter activity tracking | [Twitter/X Tracking — Your Tweets Tell More Than You Type](shared/content/twitter.md) |
 
 ### Offensive modules (noise generation)
 
 | Module | What it does | Deep dive |
 |---|---|---|
-| **search_noise** | Sends balanced search queries across Google/Bing/DuckDuckGo/Yahoo to pollute your search profile | [Search Engine Profiling — They Know What You Think](src/dont_track_me/modules/search_noise/info.md) |
-| **social_noise** | Generates diversified follow lists for Instagram/YouTube/TikTok/Facebook/Twitter | [Social Media Profiling — Your Follows Define You](src/dont_track_me/modules/social_noise/info.md) |
+| **search_noise** | Sends balanced search queries across Google/Bing/DuckDuckGo/Yahoo to pollute your search profile | [Search Engine Profiling — They Know What You Think](shared/content/search_noise.md) |
+| **social_noise** | Generates diversified follow lists for Instagram/YouTube/TikTok/Facebook/Twitter | [Social Media Profiling — Your Follows Define You](shared/content/social_noise.md) |
 
 ## How it works
 
@@ -347,41 +347,47 @@ Modules are auto-discovered at startup. Adding a new tracking vector is as simpl
 ## Architecture
 
 ```
+shared/                       # Cross-platform content (see shared/README.md)
+├── content/                  #   Educational markdown (one per module)
+├── data/                     #   Per-country YAML data files
+│   ├── ad_tracking/          #     Data broker registries with opt-out URLs
+│   ├── search_noise/         #     Balanced search query databases
+│   └── social_noise/         #     Balanced social media account databases
+├── checklists/               #   Interactive privacy checklists (YAML)
+└── schema/                   #   Scoring specs and JSON schemas
 src/dont_track_me/
-├── cli/main.py           # CLI entry point (dtm command)
+├── cli/main.py               # CLI entry point (dtm command)
 ├── core/
-│   ├── auth.py           # OAuthModule, TokenStore, OAuthFlow
-│   ├── base.py           # BaseModule ABC, AuditResult, Finding, ThreatLevel
-│   ├── checklist.py      # PrivacyCheck model & interactive checklist scoring
-│   ├── registry.py       # Auto-discovery of modules
-│   ├── scoring.py        # Weighted score aggregation
-│   └── config.py         # TOML configuration loading
+│   ├── auth.py               # OAuthModule, TokenStore, OAuthFlow
+│   ├── base.py               # BaseModule ABC, AuditResult, Finding, ThreatLevel
+│   ├── checklist.py          # PrivacyCheck model & interactive checklist scoring
+│   ├── paths.py              # SHARED_DIR resolution for cross-platform content
+│   ├── registry.py           # Auto-discovery of modules
+│   ├── scoring.py            # Weighted score aggregation (from shared YAML)
+│   └── config.py             # TOML configuration loading
 └── modules/
-    ├── dns/              # DNS leak detection & secure DNS configuration
-    ├── metadata/         # File metadata scanning & stripping
-    ├── headers/          # HTTP header analysis & recommendations
-    ├── search_noise/     # Search query noise generation
-    │   └── data/         #   Per-country query YAML files (us.yaml, fr.yaml)
-    ├── social_noise/     # Social media follow list diversification
-    │   └── data/         #   Per-country account YAML files (us.yaml, fr.yaml)
-    ├── reddit/           # Reddit privacy audit & protection (API)
-    ├── youtube/          # YouTube subscription audit & diversification (API)
-    ├── webrtc/           # WebRTC IP leak detection via STUN queries
-    ├── email/            # Email tracking pixel detection & stripping
-    ├── cookies/          # Browser cookie analysis & tracker cookie removal
-    ├── fingerprint/      # Browser fingerprint detection & hardening
-    ├── social/           # Social media tracker detection & blocking
-    ├── instagram/        # Instagram privacy checklist (interactive)
-    ├── tiktok/           # TikTok privacy checklist (interactive)
-    ├── facebook/         # Facebook privacy checklist (interactive)
-    ├── twitter/          # Twitter/X privacy checklist (interactive)
-    ├── secrets/          # Local secrets exposure audit
-    ├── ssh/              # SSH key hygiene audit
-    ├── certificates/     # TLS certificate trust audit
-    ├── app_permissions/  # macOS TCC permission audit
-    ├── location/         # Location data leakage audit (Wi-Fi, timezone, TCC)
-    └── ad_tracking/      # Advertising ID, Safari privacy, data broker audit
-        └── data/         #   Per-country broker YAML files (us.yaml, fr.yaml)
+    ├── dns/                  # DNS leak detection & secure DNS configuration
+    ├── metadata/             # File metadata scanning & stripping
+    ├── headers/              # HTTP header analysis & recommendations
+    ├── search_noise/         # Search query noise generation
+    ├── social_noise/         # Social media follow list diversification
+    ├── reddit/               # Reddit privacy audit & protection (API)
+    ├── youtube/              # YouTube subscription audit & diversification (API)
+    ├── webrtc/               # WebRTC IP leak detection via STUN queries
+    ├── email/                # Email tracking pixel detection & stripping
+    ├── cookies/              # Browser cookie analysis & tracker cookie removal
+    ├── fingerprint/          # Browser fingerprint detection & hardening
+    ├── social/               # Social media tracker detection & blocking
+    ├── instagram/            # Instagram privacy checklist (interactive)
+    ├── tiktok/               # TikTok privacy checklist (interactive)
+    ├── facebook/             # Facebook privacy checklist (interactive)
+    ├── twitter/              # Twitter/X privacy checklist (interactive)
+    ├── secrets/              # Local secrets exposure audit
+    ├── ssh/                  # SSH key hygiene audit
+    ├── certificates/         # TLS certificate trust audit
+    ├── app_permissions/      # macOS TCC permission audit
+    ├── location/             # Location data leakage audit (Wi-Fi, timezone, TCC)
+    └── ad_tracking/          # Advertising ID, Safari privacy, data broker audit
 ```
 
 ## Running tests
@@ -495,11 +501,12 @@ Each module follows the same pattern:
 
 1. Create `src/dont_track_me/modules/<name>/`
 2. Add `module.py` with a class that subclasses `BaseModule`
-3. Implement `audit()`, `protect()`, and `get_educational_content()`
-4. Add `info.md` with educational content
+3. Implement `audit()` and `protect()`
+4. Add educational content in `shared/content/<name>.md`
 5. Add tests in `tests/test_modules/test_<name>.py`
+6. Add module weight in `shared/schema/scoring.yaml`
 
-The module will be auto-discovered — no registration code needed.
+The module will be auto-discovered — no registration code needed. Educational content is loaded automatically from `shared/content/` by the base class.
 
 ## License
 
