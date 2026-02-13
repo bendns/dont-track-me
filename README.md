@@ -334,6 +334,62 @@ Returns a weighted score from 0 (fully exposed) to 100 (fully protected) with a 
 | **search_noise** | Sends balanced search queries across Google/Bing/DuckDuckGo/Yahoo to pollute your search profile | [Search Engine Profiling — They Know What You Think](shared/content/search_noise.md) |
 | **social_noise** | Generates diversified follow lists for Instagram/YouTube/TikTok/Facebook/Twitter | [Social Media Profiling — Your Follows Define You](shared/content/social_noise.md) |
 
+## dtm-agent — Real-time monitoring daemon (Rust)
+
+The Python CLI runs one-shot audits. For capabilities that require real-time monitoring or native binary analysis, there's `dtm-agent` — a lightweight Rust daemon that does things Python can't:
+
+| Capability | Why Rust | Details |
+|---|---|---|
+| **App scanner** | Mach-O parsing at scale (zero-copy with `goblin`) | Scans `/Applications` for tracking SDKs embedded in app binaries |
+| **DNS monitor** | Real-time packet capture via `libpcap` | Captures all DNS queries and flags tracker domains |
+| **3.5 MB binary** | No runtime overhead | vs ~80-150 MB for equivalent Python process |
+
+### Building dtm-agent
+
+Requires [Rust](https://rustup.rs/) and libpcap (pre-installed on macOS).
+
+```bash
+cd agent
+cargo build --release
+```
+
+### Usage
+
+```bash
+# Scan installed apps for tracking SDKs (no root required)
+./target/release/dtm-agent scan-apps
+
+# Scan apps and output JSON
+./target/release/dtm-agent scan-apps --format json
+
+# Monitor DNS queries for tracker domains (requires root)
+sudo ./target/release/dtm-agent monitor-dns
+
+# Specify a custom database path
+./target/release/dtm-agent --db /path/to/events.db scan-apps
+```
+
+Results are stored in `~/.local/share/dtm/events.db` (SQLite) and can be viewed through the Python CLI:
+
+```bash
+dtm apps                     # Show app tracking SDK analysis
+dtm apps --format json       # JSON output
+dtm monitor                  # Show captured DNS tracking events
+dtm monitor --tracker-only   # Only show tracker DNS queries
+```
+
+### What the app scanner detects
+
+- **Tracking SDKs** in Mach-O binaries via `LC_LOAD_DYLIB` load commands and framework bundles:
+  Facebook SDK, Firebase Analytics, Google Mobile Ads, Adjust, AppsFlyer, Amplitude, Mixpanel, Segment, Branch.io, Kochava, Braze, OneSignal, Sentry, Crashlytics, New Relic, Flurry, Unity Ads, ironSource, AppLovin, Chartboost, MoPub
+- **App Transport Security (ATS) exceptions** in `Info.plist` — apps that disable HTTPS enforcement or certificate pinning
+
+### What the DNS monitor detects
+
+- DNS queries to 100+ known tracker/ad domains (ad exchanges, analytics, social trackers, data brokers, attribution, email tracking)
+- Process attribution via `lsof` (which app made the query)
+- Query frequency and patterns
+
 ## How it works
 
 Every tracking vector is a **module** that implements three operations:
@@ -347,6 +403,15 @@ Modules are auto-discovered at startup. Adding a new tracking vector is as simpl
 ## Architecture
 
 ```
+agent/                        # Rust daemon (dtm-agent) — real-time monitoring
+├── Cargo.toml                #   Rust project config & dependencies
+└── src/
+    ├── main.rs               #   CLI entry point (clap)
+    ├── app_scanner.rs        #   Mach-O binary analysis for tracking SDKs
+    ├── dns_monitor.rs        #   Real-time DNS packet capture via libpcap
+    ├── tracker_domains.rs    #   Embedded tracker domain list (100+ domains)
+    ├── db.rs                 #   SQLite event store (~/.local/share/dtm/events.db)
+    └── models.rs             #   Shared data structures
 shared/                       # Cross-platform content (see shared/README.md)
 ├── content/                  #   Educational markdown (one per module)
 ├── data/                     #   Per-country YAML data files
@@ -358,6 +423,7 @@ shared/                       # Cross-platform content (see shared/README.md)
 src/dont_track_me/
 ├── cli/main.py               # CLI entry point (dtm command)
 ├── core/
+│   ├── agent.py              # Interface with dtm-agent Rust daemon's SQLite DB
 │   ├── auth.py               # OAuthModule, TokenStore, OAuthFlow
 │   ├── base.py               # BaseModule ABC, AuditResult, Finding, ThreatLevel
 │   ├── checklist.py          # PrivacyCheck model & interactive checklist scoring

@@ -17,6 +17,7 @@ from rich.markdown import Markdown
 from rich.panel import Panel
 from rich.table import Table
 
+from dont_track_me.core.agent import get_agent_db, get_app_scan_results, get_dns_events
 from dont_track_me.core.auth import (
     REDIRECT_URI,
     AuthenticationRequired,
@@ -644,6 +645,121 @@ def noise_social(
                         console.print(f"  {action}")
 
     _run_async(_run())
+
+
+@cli.command()
+@click.option("--format", "output_format", type=click.Choice(["rich", "json"]), default="rich")
+def apps(output_format: str) -> None:
+    """Show tracking SDK analysis of installed applications (from dtm-agent)."""
+    db = get_agent_db()
+    if db is None:
+        console.print("[yellow]No dtm-agent data found.[/yellow]")
+        console.print("Run the Rust agent first:")
+        console.print("  [bold]cd agent && cargo build --release[/bold]")
+        console.print("  [bold]./target/release/dtm-agent scan-apps[/bold]")
+        return
+
+    results = get_app_scan_results(db)
+    if not results:
+        console.print("[yellow]No app scan results. Run: dtm-agent scan-apps[/yellow]")
+        return
+
+    if output_format == "json":
+        click.echo(json.dumps(results, indent=2))
+        return
+
+    with_trackers = [r for r in results if r["tracking_sdks"]]
+    with_ats = [r for r in results if r["ats_exceptions"]]
+
+    console.print(Panel("[bold]App Tracking SDK Analysis[/bold]", style="blue"))
+    console.print(f"Applications scanned: {len(results)}")
+    console.print(
+        f"With tracking SDKs:   [red]{len(with_trackers)}[/red] "
+        f"({len(with_trackers) * 100 // max(len(results), 1)}%)"
+    )
+    console.print(f"With ATS exceptions:  [yellow]{len(with_ats)}[/yellow]")
+
+    if with_trackers:
+        console.print("\n[bold]Apps with Tracking SDKs:[/bold]")
+        table = Table()
+        table.add_column("Application", style="bold")
+        table.add_column("Bundle ID", style="dim")
+        table.add_column("Tracking SDKs", style="red")
+
+        for app in with_trackers:
+            sdk_names = ", ".join(s["name"] for s in app["tracking_sdks"])
+            table.add_row(
+                app["app_name"],
+                app["bundle_id"] or "unknown",
+                sdk_names,
+            )
+        console.print(table)
+
+    if with_ats:
+        console.print("\n[bold]Apps with ATS Exceptions:[/bold]")
+        table = Table()
+        table.add_column("Application", style="bold")
+        table.add_column("Exceptions", style="yellow")
+
+        for app in with_ats:
+            table.add_row(
+                app["app_name"],
+                "; ".join(app["ats_exceptions"]),
+            )
+        console.print(table)
+
+    if not with_trackers and not with_ats:
+        console.print("\n[green]No tracking SDKs or ATS exceptions found.[/green]")
+
+
+@cli.command()
+@click.option("--tracker-only", is_flag=True, help="Only show tracker DNS queries.")
+@click.option("--limit", "-n", default=50, help="Number of events to show.")
+@click.option("--format", "output_format", type=click.Choice(["rich", "json"]), default="rich")
+def monitor(tracker_only: bool, limit: int, output_format: str) -> None:
+    """Show DNS tracking events captured by dtm-agent."""
+    db = get_agent_db()
+    if db is None:
+        console.print("[yellow]No dtm-agent data found.[/yellow]")
+        console.print("Run the Rust agent first:")
+        console.print("  [bold]cd agent && cargo build --release[/bold]")
+        console.print("  [bold]sudo ./target/release/dtm-agent monitor-dns[/bold]")
+        return
+
+    events = get_dns_events(db, tracker_only=tracker_only, limit=limit)
+    if not events:
+        msg = "No tracker DNS events" if tracker_only else "No DNS events"
+        console.print(f"[yellow]{msg} recorded yet.[/yellow]")
+        console.print("Start the DNS monitor: [bold]sudo dtm-agent monitor-dns[/bold]")
+        return
+
+    if output_format == "json":
+        click.echo(json.dumps(events, indent=2))
+        return
+
+    tracker_count = sum(1 for e in events if e["is_tracker"])
+    console.print(Panel("[bold]DNS Tracking Monitor[/bold]", style="blue"))
+    console.print(f"Showing {len(events)} events ({tracker_count} tracker queries)\n")
+
+    table = Table()
+    table.add_column("Time", style="dim")
+    table.add_column("Type")
+    table.add_column("Domain")
+    table.add_column("Category")
+    table.add_column("Process")
+
+    for event in events:
+        ts = event["timestamp"][:19].replace("T", " ")
+        style = "red" if event["is_tracker"] else ""
+        table.add_row(
+            ts,
+            event["query_type"],
+            f"[{style}]{event['domain']}[/{style}]" if style else event["domain"],
+            event.get("tracker_category") or "",
+            event.get("process_name") or "",
+        )
+
+    console.print(table)
 
 
 @cli.command()

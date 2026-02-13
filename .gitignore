@@ -20,6 +20,9 @@ dtm.toml
 .env
 .env.*
 
+# Rust build artifacts
+agent/target/
+
 # OS files
 .DS_Store
 Thumbs.db

@@ -5,10 +5,13 @@ Modular anti-tracking toolkit. Audits privacy exposure and applies countermeasur
 ## Project structure
 
 ```
+agent/                 # Rust daemon (dtm-agent) — real-time privacy monitoring
+  src/                 # app_scanner.rs, dns_monitor.rs, tracker_domains.rs, db.rs, models.rs
+  Cargo.toml           # Rust dependencies (goblin, pcap, rusqlite, clap, plist)
 shared/                # Cross-platform content (educational md, YAML data, checklists, schemas)
 src/dont_track_me/
   cli/main.py          # Click CLI (dtm command)
-  core/                # Shared infra: base models, auth, config, registry, scoring, checklist, paths
+  core/                # Shared infra: base models, auth, config, registry, scoring, checklist, paths, agent
   modules/             # Each module = directory with module.py, auditor.py, protector.py
 tests/
   test_core/           # Core infrastructure tests
@@ -29,7 +32,10 @@ tests/
 - **Lint**: `uv run ruff check src/ tests/`
 - **Tests**: `uv run pytest -q` (428 tests, ~2.5s)
 - **Install dev**: `uv sync --extra dev`
-- **Run CLI**: `uv run dtm status`, `uv run dtm audit`, `uv run dtm score`, `uv run dtm protect`, `uv run dtm noise search`, `uv run dtm noise social`
+- **Run CLI**: `uv run dtm status`, `uv run dtm audit`, `uv run dtm score`, `uv run dtm protect`, `uv run dtm noise search`, `uv run dtm noise social`, `uv run dtm apps`, `uv run dtm monitor`
+- **Rust build**: `cd agent && cargo build --release`
+- **Rust tests**: `cd agent && cargo test`
+- **Run agent**: `./agent/target/release/dtm-agent scan-apps`, `sudo ./agent/target/release/dtm-agent monitor-dns`
 
 ## Ruff config
 
