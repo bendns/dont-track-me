@@ -25,47 +25,22 @@ Companies like Palantir aggregate public data across platforms. Data brokers sel
 
 ## Installation
 
-Requires Python 3.11+ and [uv](https://docs.astral.sh/uv/).
+Requires [Rust](https://rustup.rs/) (1.75+). DNS monitoring requires libpcap (pre-installed on macOS).
 
 ```bash
-# Clone the repository
+# From source
 git clone https://github.com/your-username/dont-track-me.git
 cd dont-track-me
+cargo install --path crates/dtm-cli
 
-# Install with all optional dependencies
-uv sync --extra all
-
-# Or install with development dependencies (includes test tools)
-uv sync --extra dev
-```
-
-### Minimal install
-
-If you only need the core modules (dns, headers, search noise, social noise):
-
-```bash
-uv sync
-```
-
-The metadata module requires `Pillow` and `pypdf` — install them via `uv sync --extra metadata` or `uv sync --extra all`.
-
-The fingerprint module's core works without dependencies. For enhanced JS-based fingerprint measurement, install Playwright:
-
-```bash
-uv sync --extra fingerprint
-uv run playwright install chromium
+# Or build without installing
+cargo build --release
+./target/release/dtm status
 ```
 
 ### API modules (Reddit, YouTube)
 
-The Reddit and YouTube modules connect to real APIs to audit your account and apply protections. They require OAuth credentials:
-
-```bash
-# Install with API module dependencies
-uv sync --extra social-api    # Both Reddit + YouTube
-uv sync --extra reddit         # Reddit only
-uv sync --extra youtube        # YouTube only
-```
+The Reddit and YouTube modules connect to real APIs to audit your account and apply protections. They require OAuth credentials.
 
 #### Setting up Reddit API credentials
 
@@ -130,13 +105,13 @@ dtm info dns
 Authenticate with API-backed platforms to unlock real account auditing and protection:
 
 ```bash
-dtm auth reddit              # Open browser → OAuth → store token in system keychain
-dtm auth youtube             # Open browser → OAuth → store token in system keychain
+dtm auth reddit              # Open browser -> OAuth -> store token in system keychain
+dtm auth youtube             # Open browser -> OAuth -> store token in system keychain
 dtm auth status              # Show which platforms are connected + token expiry
 dtm auth revoke reddit       # Delete stored token
 ```
 
-Tokens are stored securely in your system's credential store (macOS Keychain, Linux Secret Service, Windows Credential Locker) via `keyring`.
+Tokens are stored securely in your system's credential store (macOS Keychain, Linux Secret Service, Windows Credential Locker).
 
 ### Audit — How trackable are you?
 
@@ -188,13 +163,37 @@ Platforms can't be trusted to honor their own privacy toggles ([Facebook was fin
 
 ```bash
 dtm audit instagram                  # Educational findings (default score)
-dtm audit instagram -i               # Interactive checklist — personalized score
+dtm audit instagram -i               # Interactive checklist -- personalized score
 dtm audit tiktok -i                  # Same for TikTok (12 checks)
 dtm audit facebook -i                # Same for Facebook (14 checks)
 dtm audit twitter -i                 # Same for Twitter/X (13 checks)
 dtm protect instagram                # Step-by-step hardening guide
 dtm info instagram                   # How Instagram tracks you
 ```
+
+### Apps — Scan installed applications
+
+Scan macOS applications for tracking SDKs embedded in their binaries:
+
+```bash
+dtm apps                     # Show app tracking SDK analysis
+dtm apps --format json       # JSON output
+```
+
+Detects tracking SDKs in Mach-O binaries via `LC_LOAD_DYLIB` load commands and framework bundles: Facebook SDK, Firebase Analytics, Google Mobile Ads, Adjust, AppsFlyer, Amplitude, Mixpanel, Segment, Branch.io, Kochava, Braze, OneSignal, Sentry, Crashlytics, New Relic, Flurry, Unity Ads, ironSource, AppLovin, Chartboost, MoPub. Also checks App Transport Security (ATS) exceptions in `Info.plist` — apps that disable HTTPS enforcement or certificate pinning.
+
+### Monitor — Real-time DNS monitoring
+
+Capture DNS queries in real time and flag tracker domains:
+
+```bash
+sudo dtm monitor             # Monitor DNS queries (requires root for packet capture)
+dtm monitor --tracker-only   # Only show tracker DNS queries
+```
+
+Detects DNS queries to 100+ known tracker/ad domains (ad exchanges, analytics, social trackers, data brokers, attribution, email tracking) with process attribution and query frequency analysis.
+
+Results are stored in `~/.local/share/dtm/events.db` (SQLite).
 
 ### Noise — Poison your profile
 
@@ -302,12 +301,14 @@ Returns a weighted score from 0 (fully exposed) to 100 (fully protected) with a 
 | **webrtc** | Detects WebRTC IP leaks via STUN server queries that bypass VPNs | [WebRTC IP Leaks — Your VPN's Blind Spot](shared/content/webrtc.md) |
 | **email** | Detects and strips email tracking pixels (1x1 images, known tracker domains) in .eml files | [Email Tracking Pixels — Someone Knows You Read This](shared/content/email.md) |
 | **cookies** | Analyzes browser cookie databases (Chrome/Firefox) for third-party tracking cookies; deletes tracker cookies on protect | [Browser Cookies & Third-Party Tracking](shared/content/cookies.md) |
-| **fingerprint** | Detects browser fingerprinting exposure (Canvas, WebGL, fonts, extensions); optional Playwright-based JS measurement; hardens Firefox via user.js | [Browser Fingerprinting](shared/content/fingerprint.md) |
+| **fingerprint** | Detects browser fingerprinting exposure (Canvas, WebGL, fonts, extensions); hardens Firefox via user.js | [Browser Fingerprinting](shared/content/fingerprint.md) |
 | **social** | Detects social media tracker cookies, checks browser tracking protection (ETP/Shields), anti-tracker extensions, hosts-file blocking, and DNS-level blocking | [Social Media Trackers](shared/content/social.md) |
 | **secrets** | Scans for leaked credentials in `.env` files, `.git/config`, shell history, unencrypted SSH keys, AWS credentials, and config files | [Local Secrets Exposure — Your Credentials Are Probably Leaking](shared/content/secrets.md) |
 | **ssh** | Audits SSH key algorithm strength, passphrase protection, key age, agent forwarding, and known_hosts fingerprinting | [SSH Key Hygiene — Your Cryptographic Identity](shared/content/ssh.md) |
 | **certificates** | Audits system TLS trust store for expired, weak, or suspicious CAs (CNNIC, WoSign, DarkMatter); checks TLS version support | [TLS Certificates — The Foundation of Internet Trust](shared/content/certificates.md) |
 | **app_permissions** | Audits macOS TCC database for over-permissioned apps (camera, microphone, accessibility, full disk access, screen recording) | [macOS App Permissions — The Keys to Your Digital Life](shared/content/app_permissions.md) |
+| **app_scanner** | Scans macOS application binaries for embedded tracking SDKs via Mach-O analysis | [App Binary Tracking SDKs](shared/content/app_scanner.md) |
+| **dns_monitor** | Real-time DNS packet capture to flag tracker domain queries with process attribution | [DNS Monitoring](shared/content/dns_monitor.md) |
 | **location** | Audits Wi-Fi SSID history, timezone vs VPN mismatch, and macOS Location Services grants for location data leakage | [Location Data Leakage](shared/content/location.md) |
 | **ad_tracking** | Audits advertising ID (IDFA) exposure, Safari tracking prevention, and data broker ecosystem risks with per-country opt-out guidance | [Advertising Data Ecosystem](shared/content/ad_tracking.md) |
 
@@ -334,62 +335,6 @@ Returns a weighted score from 0 (fully exposed) to 100 (fully protected) with a 
 | **search_noise** | Sends balanced search queries across Google/Bing/DuckDuckGo/Yahoo to pollute your search profile | [Search Engine Profiling — They Know What You Think](shared/content/search_noise.md) |
 | **social_noise** | Generates diversified follow lists for Instagram/YouTube/TikTok/Facebook/Twitter | [Social Media Profiling — Your Follows Define You](shared/content/social_noise.md) |
 
-## dtm-agent — Real-time monitoring daemon (Rust)
-
-The Python CLI runs one-shot audits. For capabilities that require real-time monitoring or native binary analysis, there's `dtm-agent` — a lightweight Rust daemon that does things Python can't:
-
-| Capability | Why Rust | Details |
-|---|---|---|
-| **App scanner** | Mach-O parsing at scale (zero-copy with `goblin`) | Scans `/Applications` for tracking SDKs embedded in app binaries |
-| **DNS monitor** | Real-time packet capture via `libpcap` | Captures all DNS queries and flags tracker domains |
-| **3.5 MB binary** | No runtime overhead | vs ~80-150 MB for equivalent Python process |
-
-### Building dtm-agent
-
-Requires [Rust](https://rustup.rs/) and libpcap (pre-installed on macOS).
-
-```bash
-cd agent
-cargo build --release
-```
-
-### Usage
-
-```bash
-# Scan installed apps for tracking SDKs (no root required)
-./target/release/dtm-agent scan-apps
-
-# Scan apps and output JSON
-./target/release/dtm-agent scan-apps --format json
-
-# Monitor DNS queries for tracker domains (requires root)
-sudo ./target/release/dtm-agent monitor-dns
-
-# Specify a custom database path
-./target/release/dtm-agent --db /path/to/events.db scan-apps
-```
-
-Results are stored in `~/.local/share/dtm/events.db` (SQLite) and can be viewed through the Python CLI:
-
-```bash
-dtm apps                     # Show app tracking SDK analysis
-dtm apps --format json       # JSON output
-dtm monitor                  # Show captured DNS tracking events
-dtm monitor --tracker-only   # Only show tracker DNS queries
-```
-
-### What the app scanner detects
-
-- **Tracking SDKs** in Mach-O binaries via `LC_LOAD_DYLIB` load commands and framework bundles:
-  Facebook SDK, Firebase Analytics, Google Mobile Ads, Adjust, AppsFlyer, Amplitude, Mixpanel, Segment, Branch.io, Kochava, Braze, OneSignal, Sentry, Crashlytics, New Relic, Flurry, Unity Ads, ironSource, AppLovin, Chartboost, MoPub
-- **App Transport Security (ATS) exceptions** in `Info.plist` — apps that disable HTTPS enforcement or certificate pinning
-
-### What the DNS monitor detects
-
-- DNS queries to 100+ known tracker/ad domains (ad exchanges, analytics, social trackers, data brokers, attribution, email tracking)
-- Process attribution via `lsof` (which app made the query)
-- Query frequency and patterns
-
 ## How it works
 
 Every tracking vector is a **module** that implements three operations:
@@ -398,69 +343,71 @@ Every tracking vector is a **module** that implements three operations:
 - **protect** — Apply countermeasures. Dry-run by default. For noise modules, this generates and executes noise.
 - **educate** — Explain the threat: how it works technically, who exploits it, and why a VPN doesn't help.
 
-Modules are auto-discovered at startup. Adding a new tracking vector is as simple as creating a new directory under `src/dont_track_me/modules/` with a `module.py` that subclasses `BaseModule`.
+Each module is a struct that implements the `Module` trait defined in `dtm-core`. All modules are registered in the `AnyModule` enum for static dispatch — no runtime reflection or auto-discovery. Adding a new tracking vector means creating a new module directory under `crates/dtm-modules/src/`, implementing the `Module` trait, and adding a variant to the `AnyModule` enum.
 
 ## Architecture
 
 ```
-agent/                        # Rust daemon (dtm-agent) — real-time monitoring
-├── Cargo.toml                #   Rust project config & dependencies
-└── src/
-    ├── main.rs               #   CLI entry point (clap)
-    ├── app_scanner.rs        #   Mach-O binary analysis for tracking SDKs
-    ├── dns_monitor.rs        #   Real-time DNS packet capture via libpcap
-    ├── tracker_domains.rs    #   Embedded tracker domain list (100+ domains)
-    ├── db.rs                 #   SQLite event store (~/.local/share/dtm/events.db)
-    └── models.rs             #   Shared data structures
-shared/                       # Cross-platform content (see shared/README.md)
+shared/                       # Cross-platform content
 ├── content/                  #   Educational markdown (one per module)
 ├── data/                     #   Per-country YAML data files
 │   ├── ad_tracking/          #     Data broker registries with opt-out URLs
 │   ├── search_noise/         #     Balanced search query databases
 │   └── social_noise/         #     Balanced social media account databases
 ├── checklists/               #   Interactive privacy checklists (YAML)
-└── schema/                   #   Scoring specs and JSON schemas
-src/dont_track_me/
-├── cli/main.py               # CLI entry point (dtm command)
-├── core/
-│   ├── agent.py              # Interface with dtm-agent Rust daemon's SQLite DB
-│   ├── auth.py               # OAuthModule, TokenStore, OAuthFlow
-│   ├── base.py               # BaseModule ABC, AuditResult, Finding, ThreatLevel
-│   ├── checklist.py          # PrivacyCheck model & interactive checklist scoring
-│   ├── paths.py              # SHARED_DIR resolution for cross-platform content
-│   ├── registry.py           # Auto-discovery of modules
-│   ├── scoring.py            # Weighted score aggregation (from shared YAML)
-│   └── config.py             # TOML configuration loading
-└── modules/
-    ├── dns/                  # DNS leak detection & secure DNS configuration
-    ├── metadata/             # File metadata scanning & stripping
-    ├── headers/              # HTTP header analysis & recommendations
-    ├── search_noise/         # Search query noise generation
-    ├── social_noise/         # Social media follow list diversification
-    ├── reddit/               # Reddit privacy audit & protection (API)
-    ├── youtube/              # YouTube subscription audit & diversification (API)
-    ├── webrtc/               # WebRTC IP leak detection via STUN queries
-    ├── email/                # Email tracking pixel detection & stripping
-    ├── cookies/              # Browser cookie analysis & tracker cookie removal
-    ├── fingerprint/          # Browser fingerprint detection & hardening
-    ├── social/               # Social media tracker detection & blocking
-    ├── instagram/            # Instagram privacy checklist (interactive)
-    ├── tiktok/               # TikTok privacy checklist (interactive)
-    ├── facebook/             # Facebook privacy checklist (interactive)
-    ├── twitter/              # Twitter/X privacy checklist (interactive)
-    ├── secrets/              # Local secrets exposure audit
-    ├── ssh/                  # SSH key hygiene audit
-    ├── certificates/         # TLS certificate trust audit
-    ├── app_permissions/      # macOS TCC permission audit
-    ├── location/             # Location data leakage audit (Wi-Fi, timezone, TCC)
-    └── ad_tracking/          # Advertising ID, Safari privacy, data broker audit
+└── schema/                   #   Scoring specs
+crates/
+├── dtm-core/                 #   Library: models, traits, scoring, config, data, auth, db, report
+│   └── src/
+│       ├── models.rs         #   ThreatLevel, Finding, AuditResult, ProtectionResult
+│       ├── module_trait.rs   #   Module trait + AnyModule enum (static dispatch)
+│       ├── scoring.rs        #   Weighted score aggregation
+│       ├── checklist.rs      #   Interactive checklist scoring
+│       ├── config.rs         #   TOML config, country detection
+│       ├── data.rs           #   YAML data loading (trackers, checklists)
+│       ├── db.rs             #   SQLite event store
+│       ├── auth.rs           #   OAuth flow + token management
+│       ├── report.rs         #   HTML report generator (self-contained SPA)
+│       └── platform.rs       #   OS detection, path helpers
+├── dtm-modules/              #   Library: all 25 privacy modules
+│   └── src/
+│       ├── dns/              #   DNS leak detection
+│       ├── cookies/          #   Browser cookie analysis
+│       ├── fingerprint/      #   Browser fingerprint detection
+│       ├── social/           #   Social media tracker detection
+│       ├── email/            #   Email tracking pixel detection
+│       ├── webrtc/           #   WebRTC IP leak detection
+│       ├── metadata/         #   File metadata scanning
+│       ├── headers/          #   HTTP header analysis
+│       ├── secrets/          #   Local secrets exposure
+│       ├── ssh/              #   SSH key hygiene
+│       ├── certificates/     #   TLS trust store audit
+│       ├── app_permissions/  #   macOS TCC permission audit
+│       ├── app_scanner/      #   App binary tracking SDK detection
+│       ├── dns_monitor/      #   Real-time DNS monitoring
+│       ├── location/         #   Location data leakage
+│       ├── ad_tracking/      #   Advertising ID + data brokers
+│       ├── reddit/           #   Reddit privacy audit (OAuth)
+│       ├── youtube/          #   YouTube subscription audit (OAuth)
+│       ├── instagram/        #   Instagram privacy checklist
+│       ├── tiktok/           #   TikTok privacy checklist
+│       ├── facebook/         #   Facebook privacy checklist
+│       ├── twitter/          #   Twitter/X privacy checklist
+│       ├── search_noise/     #   Search query noise
+│       └── social_noise/     #   Social follow noise
+└── dtm-cli/                  #   Binary: the `dtm` command
+    └── src/
+        ├── main.rs           #   Clap CLI + subcommand routing
+        ├── output.rs         #   Table rendering, colored output
+        └── interactive.rs    #   Checklist prompts (dialoguer)
 ```
 
 ## Running tests
 
 ```bash
-uv sync --extra dev
-uv run pytest -v
+cargo test           # 452 tests
+cargo clippy         # Lint
+cargo fmt --check    # Format check
 ```
 
 ## Roadmap
@@ -563,16 +510,14 @@ Sources informing the roadmap — academic papers, government reports, and insti
 
 ## Contributing
 
-Each module follows the same pattern:
+Each module implements the `Module` trait in its own directory under `crates/dtm-modules/src/`:
 
-1. Create `src/dont_track_me/modules/<name>/`
-2. Add `module.py` with a class that subclasses `BaseModule`
-3. Implement `audit()` and `protect()`
+1. Create `crates/dtm-modules/src/<name>/mod.rs` with a struct implementing `Module`
+2. Add `auditor.rs` with audit/protect logic
+3. Register the module in the `AnyModule` enum in `crates/dtm-core/src/module_trait.rs`
 4. Add educational content in `shared/content/<name>.md`
-5. Add tests in `tests/test_modules/test_<name>.py`
-6. Add module weight in `shared/schema/scoring.yaml`
-
-The module will be auto-discovered — no registration code needed. Educational content is loaded automatically from `shared/content/` by the base class.
+5. Add module weight in `shared/schema/scoring.yaml`
+6. Add inline tests in `#[cfg(test)] mod tests` blocks
 
 ## License
 

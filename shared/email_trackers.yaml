@@ -1,0 +1,78 @@
+# Known email tracking pixel domains and URL path patterns.
+# These services embed 1x1 pixel images in emails to track opens.
+
+domains:
+  # Marketing automation platforms
+  - list-manage.com        # Mailchimp
+  - mailchimp.com
+  - hubspot.com
+  - track.hubspot.com
+  - track.customer.io
+  - sendgrid.net
+  - mailgun.com
+  - klaviyo.com
+  - braze.com
+  - iterable.com
+  - pardot.com             # Salesforce
+  - mktotracking.com       # Marketo
+  - marketo.com
+  - exacttarget.com        # Salesforce Marketing Cloud
+  - sfmc-content.com
+  - createsend.com         # Campaign Monitor
+  - cmail19.com
+  - cmail20.com
+  - constantcontact.com
+  - emltrk.com
+  - drip.com
+  - convertkit.com
+  - activecampaign.com
+  - aweber.com
+  - getresponse.com
+  - sendinblue.com
+  - brevo.com              # Sendinblue rebranded
+  - intercom.io
+  - intercom-mail.com
+
+  # Analytics / ad platforms (also used for email tracking)
+  - google-analytics.com
+  - bat.bing.com
+  - pixel.quantserve.com
+  - doubleclick.net
+
+  # Email tracking services (individual sender tracking)
+  - mailtrack.io
+  - yesware.com
+  - streak.com
+  - bananatag.com
+  - getnotify.com
+  - readnotify.com
+  - superhuman.com
+  - cirrusinsight.com
+  - boomeranggmail.com
+  - mixmax.com
+  - saleshandy.com
+  - snov.io
+  - woodpecker.co
+  - lemlist.com
+  - outreach.io
+  - salesloft.com
+  - apollo.io
+
+  # Other known pixel hosts
+  - links.mkt.com
+  - t.signauxfaibles.com
+  - email.hteumeuleu.com
+
+# URL path patterns that suggest tracking pixel behavior (regex)
+tracking_path_patterns:
+  - /track
+  - /pixel
+  - /beacon
+  - /open
+  - /wf/open
+  - /t.gif
+  - /o.gif
+  - /e.gif
+  - /trk
+  - /ci/e
+  - /imp

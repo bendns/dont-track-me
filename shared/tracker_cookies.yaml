@@ -1,0 +1,9 @@
+# Domains known for setting third-party tracking cookies.
+# Superset of tracker_domains.yaml — includes additional cookie-specific domains.
+
+# All domains from tracker_domains.yaml are implicitly included.
+# This file lists ADDITIONAL cookie-specific tracker domains not in the main list.
+additional_domains:
+  # These appear only in cookie tracking, not DNS/social/email
+  - googlevideo.com
+  - gstatic.com

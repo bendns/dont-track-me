@@ -1,0 +1,103 @@
+# Social media tracker domains, anti-tracker extensions, and blocking DNS resolvers.
+
+# Platform-specific tracker domains
+platforms:
+  "Meta (Facebook/Instagram)":
+    - facebook.com
+    - facebook.net
+    - fbcdn.net
+    - instagram.com
+    - fbsbx.com
+    - connect.facebook.net
+  "Google":
+    - google-analytics.com
+    - analytics.google.com
+    - googletagmanager.com
+    - googletagservices.com
+    - googlesyndication.com
+    - googleadservices.com
+    - doubleclick.net
+  "Twitter/X":
+    - twitter.com
+    - t.co
+    - ads-twitter.com
+    - analytics.twitter.com
+    - platform.twitter.com
+  "TikTok":
+    - tiktok.com
+    - tiktokcdn.com
+    - analytics.tiktok.com
+  "LinkedIn":
+    - linkedin.com
+    - licdn.com
+    - snap.licdn.com
+  "Pinterest":
+    - pinterest.com
+    - pinimg.com
+    - ct.pinterest.com
+  "Snapchat":
+    - snap.com
+    - snapchat.com
+    - sc-static.net
+    - tr.snapchat.com
+  "Reddit":
+    - reddit.com
+    - redditmedia.com
+    - redditstatic.com
+
+# Focused pixel/SDK subdomains recommended for /etc/hosts blocking
+hosts_blocklist:
+  - connect.facebook.net
+  - pixel.facebook.com
+  - www.facebook.com
+  - www.google-analytics.com
+  - ssl.google-analytics.com
+  - www.googletagmanager.com
+  - analytics.twitter.com
+  - static.ads-twitter.com
+  - t.co
+  - analytics.tiktok.com
+  - snap.licdn.com
+  - px.ads.linkedin.com
+  - ct.pinterest.com
+  - tr.snapchat.com
+  - sc-static.net
+
+# Anti-tracker browser extensions
+anti_tracker_extensions:
+  # Firefox extension IDs
+  "uBlock0@AK": uBlock Origin
+  "jid1-MnnxcxisBPnSXQ@jetpack": Privacy Badger
+  "{d10d0bf8-f5b5-c8b4-a8b2-2b9879e08c5d}": Adblock Plus
+  "jid1-ZAdIEUB7XOzOJw@jetpack": DuckDuckGo Privacy Essentials
+  "{446900e4-71c2-419f-a6a7-df9c091e268b}": Disconnect
+  "firefox@ghostery.com": Ghostery
+  "adguardadblocker@adguard.com": AdGuard AdBlocker
+  # Chrome extension IDs
+  "cjpalhdlnbpafiamejdnhcphjbkeiagm": uBlock Origin
+  "pkehgijcmpdhfbdbbnkijodmdjhbjlgp": Privacy Badger
+  "bgnkhhnnamicmpeenaelnjfhikgbkllg": AdGuard AdBlocker
+  "mcgekeccgjgcmhnhbabplanchdogjcnh": Disconnect
+  "mlomiejdfkolichcflejclcbmpeaniij": Ghostery
+  "caacbgbklghmpodbdafajbgdnegacfmo": DuckDuckGo Privacy Essentials
+
+# Extension name patterns (case-insensitive matching)
+anti_tracker_name_patterns:
+  - ublock origin
+  - privacy badger
+  - adblock
+  - ghostery
+  - disconnect
+  - adguard
+  - duckduckgo privacy
+
+# Known tracker-blocking DNS resolvers
+tracker_blocking_dns:
+  "45.90.28.0": NextDNS
+  "45.90.30.0": NextDNS
+  "94.140.14.14": AdGuard DNS
+  "94.140.15.15": AdGuard DNS
+  "176.103.130.130": AdGuard DNS
+  "176.103.130.131": AdGuard DNS
+  "194.242.2.3": "Mullvad DNS (ad-blocking)"
+  "194.242.2.4": "Mullvad DNS (tracker + ad-blocking)"
