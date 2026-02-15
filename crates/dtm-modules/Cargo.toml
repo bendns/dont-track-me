@@ -1,0 +1,57 @@
+[package]
+name = "dtm-modules"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+dtm-core = { path = "../dtm-core", features = [] }
+base64 = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+serde_yaml = { workspace = true }
+chrono = { workspace = true }
+rusqlite = { workspace = true }
+async-trait = { workspace = true }
+thiserror = { workspace = true }
+anyhow = { workspace = true }
+regex = { workspace = true }
+walkdir = { workspace = true }
+log = { workspace = true }
+tokio = { workspace = true }
+reqwest = { workspace = true }
+form_urlencoded = { workspace = true }
+rand = "0.8"
+open = "5"
+tempfile = { workspace = true }
+
+# Platform-specific (always compiled, runtime-gated)
+plist = { workspace = true }
+
+# Optional heavy dependencies
+goblin = { workspace = true, optional = true }
+pcap = { workspace = true, optional = true }
+keyring = { version = "3", optional = true }
+tiny_http = { version = "0.12", optional = true }
+kamadak-exif = { version = "0.5", optional = true }
+lopdf = { version = "0.34", optional = true }
+x509-parser = { version = "0.16", optional = true }
+rustls-native-certs = { version = "0.8", optional = true }
+time = { version = "0.3", optional = true }
+
+[target.'cfg(target_os = "windows")'.dependencies]
+winreg = "0.52"
+
+[features]
+default = ["all-modules"]
+all-modules = ["pcap-capture", "macho-scan", "metadata-parse", "oauth", "certificates"]
+pcap-capture = ["pcap"]
+macho-scan = ["goblin"]
+metadata-parse = ["kamadak-exif", "lopdf"]
+oauth = ["keyring", "tiny_http", "dtm-core/oauth"]
+certificates = ["x509-parser", "rustls-native-certs", "time"]
+
+[dev-dependencies]
+tempfile = { workspace = true }
+wiremock = { workspace = true }
+tokio = { workspace = true, features = ["macros", "rt"] }
+filetime = "0.2"

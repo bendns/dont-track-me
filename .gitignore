@@ -1,17 +1,5 @@
-__pycache__/
-*.py[cod]
-*$py.class
-*.egg-info/
-dist/
-build/
-.eggs/
-*.egg
-.venv/
-venv/
-.pytest_cache/
-.coverage
-htmlcov/
-.ruff_cache
+# Rust build artifacts
+target/
 
 # Config files that may contain credentials
 config.toml
@@ -23,3 +11,14 @@ dtm.toml
 # OS files
 .DS_Store
 Thumbs.db
+
+# Editor files
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+
+# Generated reports
+report.html
+*.report.html

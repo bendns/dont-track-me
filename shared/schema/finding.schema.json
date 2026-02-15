@@ -1,0 +1,41 @@
+{
+  "$defs": {
+    "ThreatLevel": {
+      "enum": [
+        "critical",
+        "high",
+        "medium",
+        "low",
+        "info"
+      ],
+      "title": "ThreatLevel",
+      "type": "string"
+    }
+  },
+  "description": "A single audit finding \u2014 one specific privacy issue detected.",
+  "properties": {
+    "title": {
+      "title": "Title",
+      "type": "string"
+    },
+    "description": {
+      "title": "Description",
+      "type": "string"
+    },
+    "threat_level": {
+      "$ref": "#/$defs/ThreatLevel"
+    },
+    "remediation": {
+      "title": "Remediation",
+      "type": "string"
+    }
+  },
+  "required": [
+    "title",
+    "description",
+    "threat_level",
+    "remediation"
+  ],
+  "title": "Finding",
+  "type": "object"
+}

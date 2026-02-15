@@ -1,0 +1,96 @@
+# Known tracking SDK frameworks detectable in Mach-O binaries.
+# Each entry has a dylib substring pattern, human-readable name, and category.
+
+sdks:
+  # Facebook / Meta
+  - pattern: FBSDKCoreKit
+    name: Facebook SDK
+    category: social
+  - pattern: FBSDKLoginKit
+    name: Facebook Login SDK
+    category: social
+  - pattern: FBSDKShareKit
+    name: Facebook Share SDK
+    category: social
+
+  # Google
+  - pattern: GoogleAnalytics
+    name: Google Analytics
+    category: analytics
+  - pattern: FirebaseAnalytics
+    name: Firebase Analytics
+    category: analytics
+  - pattern: FirebaseCore
+    name: Firebase Core
+    category: analytics
+  - pattern: GoogleMobileAds
+    name: Google Mobile Ads
+    category: advertising
+  - pattern: GoogleTagManager
+    name: Google Tag Manager
+    category: analytics
+
+  # Attribution / marketing
+  - pattern: Adjust
+    name: Adjust
+    category: attribution
+  - pattern: AppsFlyerLib
+    name: AppsFlyer
+    category: attribution
+  - pattern: Amplitude
+    name: Amplitude
+    category: analytics
+  - pattern: Mixpanel
+    name: Mixpanel
+    category: analytics
+  - pattern: Segment
+    name: Segment
+    category: analytics
+  - pattern: Branch
+    name: Branch.io
+    category: attribution
+  - pattern: Kochava
+    name: Kochava
+    category: attribution
+
+  # Push / engagement
+  - pattern: Braze
+    name: Braze
+    category: engagement
+  - pattern: Appboy
+    name: Braze (Appboy)
+    category: engagement
+  - pattern: OneSignal
+    name: OneSignal
+    category: engagement
+
+  # Error tracking (includes device fingerprinting)
+  - pattern: Sentry
+    name: Sentry
+    category: error_tracking
+  - pattern: Crashlytics
+    name: Crashlytics
+    category: error_tracking
+  - pattern: NewRelic
+    name: New Relic
+    category: monitoring
+  - pattern: Flurry
+    name: Flurry
+    category: analytics
+
+  # Ad mediation
+  - pattern: UnityAds
+    name: Unity Ads
+    category: advertising
+  - pattern: IronSource
+    name: ironSource
+    category: advertising
+  - pattern: AppLovinSDK
+    name: AppLovin
+    category: advertising
+  - pattern: MoPub
+    name: MoPub
+    category: advertising
+  - pattern: Chartboost
+    name: Chartboost
+    category: advertising
