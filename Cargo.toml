@@ -1,0 +1,65 @@
+[workspace]
+resolver = "2"
+members = [
+    "crates/dtm-core",
+    "crates/dtm-modules",
+    "crates/dtm-cli",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+license = "MIT"
+
+[workspace.dependencies]
+# Serialization
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+serde_yaml = "0.9"
+toml = "0.8"
+
+# Async
+tokio = { version = "1", features = ["full"] }
+async-trait = "0.1"
+
+# Error handling
+thiserror = "2"
+anyhow = "1"
+
+# Data
+base64 = "0.22"
+chrono = { version = "0.4", features = ["serde"] }
+regex = "1"
+walkdir = "2"
+rusqlite = { version = "0.32", features = ["bundled"] }
+
+# HTTP
+reqwest = { version = "0.12", features = ["json", "rustls-tls", "blocking"] }
+form_urlencoded = "1"
+
+# CLI
+clap = { version = "4", features = ["derive"] }
+comfy-table = "7"
+owo-colors = "4"
+termimad = "0.30"
+indicatif = "0.17"
+dialoguer = "0.11"
+open = "5"
+
+# Logging
+log = "0.4"
+env_logger = "0.11"
+
+# Platform-specific
+plist = "1"
+goblin = "0.9"
+pcap = "2"
+
+# Testing
+tempfile = "3"
+wiremock = "0.6"
+
+[profile.release]
+opt-level = 3
+lto = true
+strip = true

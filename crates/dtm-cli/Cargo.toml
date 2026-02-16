@@ -1,0 +1,25 @@
+[package]
+name = "dtm-cli"
+version.workspace = true
+edition.workspace = true
+
+[[bin]]
+name = "dtm"
+path = "src/main.rs"
+
+[dependencies]
+dtm-core = { path = "../dtm-core" }
+dtm-modules = { path = "../dtm-modules" }
+clap = { workspace = true }
+tokio = { workspace = true }
+comfy-table = { workspace = true }
+owo-colors = { workspace = true }
+termimad = { workspace = true }
+indicatif = { workspace = true }
+dialoguer = { workspace = true }
+serde_json = { workspace = true }
+chrono = { workspace = true }
+anyhow = { workspace = true }
+open = { workspace = true }
+log = { workspace = true }
+env_logger = { workspace = true }

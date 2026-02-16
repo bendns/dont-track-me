@@ -1,0 +1,33 @@
+{
+  "description": "Result of running a module's protect action.",
+  "properties": {
+    "module_name": {
+      "title": "Module Name",
+      "type": "string"
+    },
+    "dry_run": {
+      "title": "Dry Run",
+      "type": "boolean"
+    },
+    "actions_taken": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Actions Taken",
+      "type": "array"
+    },
+    "actions_available": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Actions Available",
+      "type": "array"
+    }
+  },
+  "required": [
+    "module_name",
+    "dry_run"
+  ],
+  "title": "ProtectionResult",
+  "type": "object"
+}

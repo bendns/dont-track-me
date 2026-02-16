@@ -1,0 +1,111 @@
+# Consolidated tracker domains for DNS query matching, cookie analysis, and social tracking.
+# Merged from cookies/trackers.py, social/trackers.py, and agent/src/tracker_domains.rs.
+# Each domain is categorized by its primary tracking function.
+
+advertising:
+  # Google ad network
+  - doubleclick.net
+  - googlesyndication.com
+  - googleadservices.com
+  # Amazon
+  - amazon-adsystem.com
+  # Ad exchanges and DSPs
+  - adsrvr.org
+  - criteo.com
+  - criteo.net
+  - outbrain.com
+  - taboola.com
+  - rubiconproject.com
+  - pubmatic.com
+  - openx.net
+  - indexexchange.com
+  - adnxs.com
+  - bidswitch.net
+  - sharethrough.com
+  - spotxchange.com
+  - smartadserver.com
+  - moatads.com
+  - doubleverify.com
+  - yieldmo.com
+  - ads-twitter.com
+
+analytics:
+  # Google
+  - google-analytics.com
+  - analytics.google.com
+  - googletagmanager.com
+  - googletagservices.com
+  - googlevideo.com
+  - gstatic.com
+  # Microsoft
+  - bat.bing.com
+  - bing.com
+  - clarity.ms
+  # Standalone analytics platforms
+  - hotjar.com
+  - fullstory.com
+  - mixpanel.com
+  - segment.com
+  - segment.io
+  - amplitude.com
+  - heap.io
+  - newrelic.com
+  - nr-data.net
+  - chartbeat.com
+  - scorecardresearch.com
+  - comscore.com
+  - quantserve.com
+
+social:
+  # Meta (Facebook/Instagram)
+  - facebook.com
+  - facebook.net
+  - fbcdn.net
+  - instagram.com
+  - fbsbx.com
+  - connect.facebook.net
+  # Twitter/X
+  - twitter.com
+  - t.co
+  - analytics.twitter.com
+  - platform.twitter.com
+  # TikTok
+  - tiktok.com
+  - tiktokcdn.com
+  - analytics.tiktok.com
+  # LinkedIn
+  - linkedin.com
+  - licdn.com
+  - snap.licdn.com
+  # Pinterest
+  - pinterest.com
+  - pinimg.com
+  - ct.pinterest.com
+  # Snapchat
+  - snap.com
+  - snapchat.com
+  - sc-static.net
+  - tr.snapchat.com
+  # Reddit
+  - reddit.com
+  - redditmedia.com
+  - redditstatic.com
+
+data_broker:
+  - bluekai.com       # Oracle
+  - demdex.net        # Adobe
+  - krxd.net          # Salesforce
+  - rlcdn.com         # LiveRamp
+  - casalemedia.com
+  - exelator.com      # Nielsen
+  - eyeota.net
+  - lotame.com
+  - addthis.com
+  - sharethis.com
+
+attribution:
+  - branch.io
+  - appsflyer.com
+  - adjust.com
+  - kochava.com
+  - adsymptotic.com

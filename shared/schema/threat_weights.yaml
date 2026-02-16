@@ -1,0 +1,9 @@
+# Score penalty per threat level when a privacy check is unsafe.
+# Used by checklist-based modules (instagram, tiktok, facebook, twitter).
+
+threat_weights:
+  critical: 15
+  high: 10
+  medium: 6
+  low: 3
+  info: 0

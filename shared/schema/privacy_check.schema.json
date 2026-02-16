@@ -1,0 +1,68 @@
+{
+  "$defs": {
+    "ThreatLevel": {
+      "enum": [
+        "critical",
+        "high",
+        "medium",
+        "low",
+        "info"
+      ],
+      "title": "ThreatLevel",
+      "type": "string"
+    }
+  },
+  "description": "A single yes/no privacy setting check.",
+  "properties": {
+    "id": {
+      "title": "Id",
+      "type": "string"
+    },
+    "question": {
+      "title": "Question",
+      "type": "string"
+    },
+    "description": {
+      "title": "Description",
+      "type": "string"
+    },
+    "threat_level": {
+      "$ref": "#/$defs/ThreatLevel"
+    },
+    "remediation": {
+      "title": "Remediation",
+      "type": "string"
+    },
+    "category": {
+      "title": "Category",
+      "type": "string"
+    },
+    "technical_countermeasure": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Technical Countermeasure"
+    },
+    "safe_answer": {
+      "default": true,
+      "title": "Safe Answer",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "id",
+    "question",
+    "description",
+    "threat_level",
+    "remediation",
+    "category"
+  ],
+  "title": "PrivacyCheck",
+  "type": "object"
+}
